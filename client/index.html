@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DTube Signup</title>
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <script src="https://hcaptcha.com/1/api.js" async defer></script>
+</head>
+<body class="bg-navy">
+    <div class="container">
+        <center>
+            <div class="hero hero-lg">
+                <div class="hero-body">
+                    <img width="200" src="https://about.d.tube/img/kit/Logo_White.svg"/>
+                    <h1>Signup</h1>
+                    <p>You want a free DTube account? You're at the right place.</p>
+                </div>
+            </div>
+            <div class="columns">
+                <form id='form' class='form-vertical col-4 col-mx-auto' action='' method='POST'>
+                    <input type="hidden" name="ref" id="ref">
+                    <div id='step1' class="column" style='display:none'>
+                        <div class="form-group">
+                            <label class="form-label" for="email">Please give us your email</label>
+                            <input class="form-input" type="text" id="email" placeholder="Email" name="email">
+                        </div>
+                        <button id="afterEmail" class="btn btn-primary btn-lg" type="button">
+                            <i class="icon icon-arrow-right"></i> Next
+                        </button>
+                    </div>
+                    <div id='step2' class="column" style='display:none'>
+                        <div id='captchaContainer'>
+                            <div class="h-captcha" data-sitekey="7816bec3-01e0-4c93-8252-dec58d7b1da9"></div> 
+                        </div>
+                        <button id="sendEmail" class="btn btn-light btn-lg" type="submit">
+                            <i class="icon icon-arrow-right"></i> Send email
+                        </button>
+                    </div>
+                    <div id='step3' class="column" style='display:none'>
+                        <span class="label label-primary">We have sent you an email!</span>
+                        <br /><br />
+                        <button id="goBack" class="btn btn-primary btn-lg" type="button">
+                            <i class="icon icon-arrow-left"></i> Go Back
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </center>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        var urlParams = new URLSearchParams(location.search);
+        if (urlParams.has('ok')) {
+            $('#step3').show()
+        } else {
+            $('#step1').show()
+        }
+        if (urlParams.has('ref')) {
+            ref.value = urlParams.get('ref')
+        }
+    </script>
+    
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./js/index.js"></script>
+</body>
+</html>
