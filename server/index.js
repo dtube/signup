@@ -7,6 +7,7 @@ const enforce = require('express-sslify')
 const steem = require('steem')
 const emails = require('./emails.js')
 const captcha = require('./captcha.js')
+const sms = require('./sms.js')
 
 const MongoClient = require('mongodb').MongoClient;
 const mongoUrl = 'mongodb://localhost:27017';
