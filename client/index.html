@@ -15,6 +15,7 @@
 <body class="bg-navy">
     <div class="container">
         <center>
+            <div id="toastError" class="toast toast-primary" style="display: none"></div>
             <div class="hero hero-sm">
                 <div class="hero-body">
                     <img width="200" src="https://about.d.tube/img/kit/Logo_White.svg"/>
@@ -66,15 +67,18 @@
                             <div class="h-captcha" data-sitekey="7816bec3-01e0-4c93-8252-dec58d7b1da9"></div> 
                         </div>
                         <button id="sendEmail" class="btn btn-light btn-lg" type="submit">
-                            <i class="icon icon-arrow-right"></i> Send email
+                            <i class="icon icon-mail"></i> Send email
                         </button>
                     </div>
                     <div id='step3' class="column" style='display:none'>
                         <span class="label label-primary">We have sent you an email!</span>
                         <br /><br />
-                        <button id="goBack" class="btn btn-primary btn-lg" type="button">
+                        <button id="goBack" class="btn btn btn-lg" type="button">
                             <i class="icon icon-arrow-left"></i> Go Back
                         </button>
+                        <!-- <button id="closePage" class="btn btn-primary btn-lg" type="button">
+                            <i class="icon icon-cross"></i> Close
+                        </button> -->
                     </div>
 
                     <div id="loader" class="loading loading-lg"></div>
@@ -92,7 +96,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="country">Country of residence *</label>
-                            <select class="form-select" name="country" style="color: black"> 
+                            <select class="form-select" id="country" name="country" style="color: black"> 
                                 <option value="" selected="selected">Select Country</option> 
                                 <option value="United States">United States</option> 
                                 <option value="United Kingdom">United Kingdom</option> 
@@ -359,10 +363,10 @@
                         <h3>Link your FB account</h3>
                         <p>Bla bla +X VP +Y DTC</p>
                         <button id="skipFb" class="btn btn-error btn-lg" type="button">
-                            <i class="icon icon-arrow-left"></i> Skip
+                            <i class="icon icon-stop"></i> Skip
                         </button>
                         <button id="fbConnect" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-people"></i> Link my FB account
+                            <i class="icon icon-check"></i> Link my FB account
                         </button>
                     </div>
 
@@ -373,10 +377,10 @@
                             <input class="form-input" type="text" id="phone" placeholder="phone" name="phone">
                         </div>
                         <button id="skipSms" class="btn btn-error btn-lg" type="button">
-                            <i class="icon icon-arrow-left"></i> Skip
+                            <i class="icon icon-stop"></i> Skip
                         </button>
                         <button id="sendCode" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-arrow-right"></i> Send code
+                            <i class="icon icon-message"></i> Send code
                         </button>
                     </div>
 
@@ -387,10 +391,10 @@
                             <input class="form-input" type="text" id="code" placeholder="code" name="code">
                         </div>
                         <button id="backSms" class="btn btn-error btn-lg" type="button">
-                            <i class="icon icon-arrow-right"></i> Back
+                            <i class="icon icon-arrow-left"></i> Back
                         </button>
                         <button id="verifySmsCode" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-arrow-right"></i> Verify Code
+                            <i class="icon icon-check"></i> Verify Code
                         </button>
                     </div>
                     
@@ -411,10 +415,10 @@
                             <input class="form-input input-sm" type="text" id="private" disabled>
                         </div>
                         <button id="saveKeys" class="btn" type="button">
-                            <i class="icon icon-arrow-right"></i> Save keys to disk
+                            <i class="icon icon-download"></i> Save keys to disk
                         </button>
                         <button id="copyPriv" class="btn" type="button">
-                            <i class="icon icon-arrow-right"></i> Copy private key
+                            <i class="icon icon-copy"></i> Copy private key
                         </button>
                         <hr>
                         <div class="form-group">
@@ -430,7 +434,7 @@
                             </label>
                         </div>
                         <button id="confirmKeys" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-arrow-right"></i> Confirm
+                            <i class="icon icon-check"></i> Confirm
                         </button>
                     </div>
 
@@ -446,7 +450,7 @@
                             <input class="form-input" type="text" id="username">
                         </div>
                         <button id="chooseUsername" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-arrow-right"></i> Choose username
+                            <i class="icon icon-check"></i> Choose username
                         </button>
                     </div>
 

@@ -35,7 +35,9 @@ submitPersonalInfo.onclick = function() {
     }).then(function(data) {
         loadInfo(myUuid)
     }).catch(function(err, data) {
-        console.log(err)
+        console.log(err.response.data)
+        loadInfo(myUuid)
+        toastError(err.response.data)
     })
 }
 
@@ -51,8 +53,9 @@ skipFb.onclick = function() {
         loadInfo(myUuid)
     })
     .catch((error) => {
-        console.error("Timeout ", error.code)
-        return
+        console.log(err.response.data)
+        loadInfo(myUuid)
+        toastError(err.response.data)
     })
 }
 fbConnect.onclick = function() {
@@ -73,9 +76,15 @@ skipSms.onclick = function() {
         loadInfo(myUuid)
     })
     .catch((error) => {
-        console.error("Timeout ", error.code)
-        return
+        console.log(err.response.data)
+        loadInfo(myUuid)
+        toastError(err.response.data)
     })
+}
+
+backSms.onclick = function() {
+    $('#sms_verif').show()
+    $('#sms_verif2').hide()
 }
 
 sendCode.onclick = function() {
@@ -91,7 +100,9 @@ sendCode.onclick = function() {
         $('#sms_verif').hide()
         $('#sms_verif2').show()
     }).catch(function(err, data) {
-        console.log(err)
+        console.log(err.response.data)
+        loadInfo(myUuid)
+        toastError(err.response.data)
     })
 }
 
@@ -113,7 +124,9 @@ verifySmsCode.onclick = function() {
         $('#public').val(key.pub)
         $('#private').val(key.priv)
     }).catch(function(err, data) {
-        console.log(err)
+        console.log(err.response.data)
+        loadInfo(myUuid)
+        toastError(err.response.data)
     })
 }
 
@@ -133,7 +146,9 @@ confirmKeys.onclick = function() {
         $('#username_choice').show()
         progress(5)
     }).catch(function(err, data) {
-        console.log(err)
+        console.log(err.response.data)
+        loadInfo(myUuid)
+        toastError(err.response.data)
     })
 }
 
@@ -151,8 +166,15 @@ chooseUsername.onclick = function() {
         console.log(data)
         location.href = location.origin
     }).catch(function(err, data) {
-        console.log(err)
+        console.log(err.response.data)
+        loadInfo(myUuid)
+        toastError(err.response.data)
     })
+}
+
+function toastError(message) {
+    $("#toastError")[0].innerHTML = message
+    $("#toastError").show()
 }
 
 function progress(n) {
@@ -169,6 +191,7 @@ function loader() {
 
 function loadInfo(uuid) {
     $('#loader').show()
+    $("#toastError").hide()
     var url = '/signup/'+uuid
     var options = {
         method: 'GET',
@@ -219,7 +242,9 @@ function loadInfo(uuid) {
         return
     })
     .catch((error) => {
-        console.error("Timeout ", error.code)
+        console.error("Could not load info", error.code)
+        localStorage.setItem('uuid', '')
+        location.href = location.origin
         return
     })
 }

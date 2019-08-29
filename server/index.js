@@ -1,6 +1,7 @@
 const config = require('./config.js')
 const fs = require('fs')
 const uuidv1 = require('uuid/v1')
+const moment = require('moment')
 const express = require('express')
 const https = require('https')
 const http = require('http')
@@ -121,6 +122,18 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         app.post('/personalInfo/:uuid', function (req, res) {
             if (!req.params.uuid || !req.body.personal_info) {
                 res.status(503).send('Missing data')
+                return
+            }
+            console.log(req.body.personal_info)
+            var info = req.body.personal_info
+            if (!info.birth || !info.postal || !info.country) {
+                res.status(503).send('Missing data')
+                return
+            }
+            var years = moment().diff(info.birth, 'years')
+            console.log(years)
+            if (years < 13) {
+                res.status(503).send('You need to be at least 13 years old')
                 return
             }
             db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
