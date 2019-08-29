@@ -124,14 +124,12 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.status(503).send('Missing data')
                 return
             }
-            console.log(req.body.personal_info)
             var info = req.body.personal_info
             if (!info.birth || !info.postal || !info.country) {
                 res.status(503).send('Missing data')
                 return
             }
             var years = moment().diff(info.birth, 'years')
-            console.log(years)
             if (years < 13) {
                 res.status(503).send('You need to be at least 13 years old')
                 return
