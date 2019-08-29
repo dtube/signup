@@ -33,7 +33,7 @@ var captcha = {
             cb()
         })
         .catch((error) => {
-            cb(true)
+            cb(error.data)
         })
     }
 }

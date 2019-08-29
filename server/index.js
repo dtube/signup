@@ -68,6 +68,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             } else {
                 captcha.check(req.body['h-captcha-response'], function(err) {
                     if (err) {
+                        console.log(err)
                         res.status(503).send('Error verifying captcha')
                         return
                     }
@@ -136,6 +137,25 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         })
 
         // facebook connect
+        app.get('/skipFb/:uuid', function(req, res) {
+            if (!req.params.uuid) {
+                res.status(503).send('Missing data')
+                return
+            }
+            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
+                if (err || !token) {
+                    res.status(503).send('Error verifying uuid')
+                    return
+                }
+
+                db.collection('account').updateOne({email: token.email}, {
+                    $set: {facebook: 'skip'}
+                }, function() {
+                    res.send()
+                })
+            })
+        })
+
         app.get('/auth/facebook',
             fb.authenticate('facebook')
         );
@@ -169,6 +189,25 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                     })
                 })
                 
+            })
+        })
+
+        app.get('/skipSms/:uuid', function(req, res) {
+            if (!req.params.uuid) {
+                res.status(503).send('Missing data')
+                return
+            }
+            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
+                if (err || !token) {
+                    res.status(503).send('Error verifying uuid')
+                    return
+                }
+
+                db.collection('account').updateOne({email: token.email}, {
+                    $set: {phone: 'skip'}
+                }, function() {
+                    res.send()
+                })
             })
         })
 

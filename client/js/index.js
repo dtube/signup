@@ -39,11 +39,44 @@ submitPersonalInfo.onclick = function() {
     })
 }
 
+skipFb.onclick = function() {
+    var url = '/skipFb/'+myUuid
+    var options = {
+        method: 'GET',
+        timeout: 15000,
+        url: url,
+    }
+    axios(options)
+    .then((data) => {
+        loadInfo(myUuid)
+    })
+    .catch((error) => {
+        console.error("Timeout ", error.code)
+        return
+    })
+}
 fbConnect.onclick = function() {
     location.href = '/auth/facebook'
 }
 
+
 // sms
+skipSms.onclick = function() {
+    var url = '/skipSms/'+myUuid
+    var options = {
+        method: 'GET',
+        timeout: 15000,
+        url: url,
+    }
+    axios(options)
+    .then((data) => {
+        loadInfo(myUuid)
+    })
+    .catch((error) => {
+        console.error("Timeout ", error.code)
+        return
+    })
+}
 
 sendCode.onclick = function() {
     axios({
@@ -84,6 +117,8 @@ verifySmsCode.onclick = function() {
     })
 }
 
+// keys
+
 confirmKeys.onclick = function() {
     axios({
         method: "POST",
@@ -101,6 +136,8 @@ confirmKeys.onclick = function() {
         console.log(err)
     })
 }
+
+// username
 
 chooseUsername.onclick = function() {
     axios({
@@ -199,7 +236,7 @@ function lastStep(account) {
         dtc += 1
     }
     if (account.phone === 'skip')
-        $('#rowFacebook')[0].style.textDecoration = 'line-through'
+        $('#rowPhone')[0].style.textDecoration = 'line-through'
     else {
         vp += 1000
         dtc += 5
