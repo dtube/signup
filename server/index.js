@@ -18,7 +18,7 @@ const mongoUrl = 'mongodb://localhost:27017';
 const mongoDbName = 'signup';
 
 const port = process.env.PORT || 3000
-const port_ssl = process.env.PORT || 443
+const port_ssl = process.env.PORT_SSL || 443
 const debug = process.env.DEBUG || false
 
 process.on('SIGINT', function() {
