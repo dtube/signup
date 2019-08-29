@@ -21,8 +21,11 @@
     "axios": "^0.19.0",
     "express": "^4.17.1",
     "express-sslify": "^1.2.0",
+    "javalon": "^1.0.21",
     "mongodb": "^3.3.0",
     "nodemailer": "^6.3.0",
+    "passport": "^0.4.0",
+    "passport-facebook": "^3.0.0",
     "steem": "^0.7.7",
     "uuid": "^3.3.3"
   }
