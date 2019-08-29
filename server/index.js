@@ -1,3 +1,4 @@
+const config = require('./config.js')
 const fs = require('fs')
 const uuidv1 = require('uuid/v1')
 const express = require('express')
@@ -40,7 +41,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
     console.log("Connected successfully to database");
     db = client.db(mongoDbName);
     http.createServer(app).listen(port, () => {
-        if (!debug) {
+        if (config.ssl) {
             const privateKey = fs.readFileSync('/etc/letsencrypt/live/signup.d.tube/privkey.pem', 'utf8');
             const certificate = fs.readFileSync('/etc/letsencrypt/live/signup.d.tube/cert.pem', 'utf8');
             const ca = fs.readFileSync('/etc/letsencrypt/live/signup.d.tube/chain.pem', 'utf8');
