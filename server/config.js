@@ -1,4 +1,5 @@
 var config = {
+    protocol: process.env.PROTOCOL || 'http://',
     ssl: process.env.ENABLE_SSL || false,
     domain: process.env.DOMAIN || "http://localhost:3000",
     hcaptchaSecret: process.env.HCAPTCHA_SECRET || "aaa",

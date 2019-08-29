@@ -20,7 +20,7 @@ var emails = {
             cb(recipient+' is not a valid email')
             return
         }
-        var link = config.domain+'/?uuid='+uuid
+        var link = config.protocol+config.domain+'/?uuid='+uuid
         var text = "Claim your dtube account now\nclick on the following link:\n"
         var htmlText = text.replace('\n','<br/>')
         text += link
