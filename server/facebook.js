@@ -4,7 +4,8 @@ const config = require('./config.js')
 passport.use(new FacebookStrategy({
     clientID: config.fb.id,
     clientSecret: config.fb.secret,
-    callbackURL: config.protocol+config.domain+"/auth/facebook/callback"
+    callbackURL: config.protocol+config.domain+"/auth/facebook/callback",
+    profileFields: ['id', 'displayName', 'email']
   },
   function(accessToken, refreshToken, profile, cb) {
     db.collection('facebook').insertOne({

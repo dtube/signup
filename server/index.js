@@ -63,34 +63,39 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         // captcha + email verification
         app.post('/', function (req, res) {
-            if (!req.body.email || !req.body['h-captcha-response']) {
-                res.status(400).send('Bad Request')
+            if (!req.body.email || !req.body['h-captcha-response'] || !req.body.birth) {
+                res.status(400).send('Missing information')
                 return
-            } else {
-                captcha.check(req.body['h-captcha-response'], function(err) {
-                    if (err) {
-                        console.log(err)
-                        res.status(503).send('Error verifying captcha')
-                        return
-                    }
-                    var uuid = uuidv1()
-                    emails.send(req.body.email, 'DTube Signup', uuid, function(err, success) {
-                        if (!err) {
-                            db.collection('tokens').insertOne({
-                                _id: uuid,
-                                email: req.body.email,
-                                ts: new Date().getTime()
-                            }, function(err) {
-                                if (err) throw err;
-                                res.redirect('/?ok')
-                            })
-                        } else { 
-                            console.log(err)
-                            res.status(503).send('Error sending email')
-                        }
-                    })
-                })
             }
+            var years = moment().diff(req.body.birth, 'years')
+            if (years < 13) {
+                res.redirect('/?kid')
+                return
+            }
+            captcha.check(req.body['h-captcha-response'], function(err) {
+                if (err) {
+                    console.log(err)
+                    res.status(503).send('Error verifying captcha')
+                    return
+                }
+                var uuid = uuidv1()
+                emails.send(req.body.email, 'DTube Signup', uuid, function(err, success) {
+                    if (!err) {
+                        db.collection('tokens').insertOne({
+                            _id: uuid,
+                            email: req.body.email,
+                            birth: req.body.birth,
+                            ts: new Date().getTime()
+                        }, function(err) {
+                            if (err) throw err;
+                            res.redirect('/?ok')
+                        })
+                    } else { 
+                        console.log(err)
+                        res.status(503).send('Error sending email')
+                    }
+                })
+            })
         })
 
         // user clicks the email link
@@ -108,6 +113,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                     if (!acc) {
                         var acc = {
                             email: token.email,
+                            birth: token.birth,
                             startTime: new Date().getTime()
                         }
                         db.collection('account').insertOne(acc)
@@ -121,17 +127,12 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // user submits personal info
         app.post('/personalInfo/:uuid', function (req, res) {
             if (!req.params.uuid || !req.body.personal_info) {
-                res.status(503).send('Missing data')
+                res.status(503).send('Missing information')
                 return
             }
             var info = req.body.personal_info
-            if (!info.birth || !info.postal || !info.country) {
-                res.status(503).send('Missing data')
-                return
-            }
-            var years = moment().diff(info.birth, 'years')
-            if (years < 13) {
-                res.status(503).send('You need to be at least 13 years old')
+            if (!info.postal || !info.country) {
+                res.status(503).send('Missing information')
                 return
             }
             db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
@@ -150,7 +151,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // facebook connect
         app.get('/skipFb/:uuid', function(req, res) {
             if (!req.params.uuid) {
-                res.status(503).send('Missing data')
+                res.status(503).send('Missing information')
                 return
             }
             db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
@@ -180,7 +181,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         app.get('/linkFacebook/:token/:uuid', function(req, res) {
             if (!req.params.token || !req.params.uuid) {
-                res.status(503).send('Missing data')
+                res.status(503).send('Missing information')
                 return
             }
             db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
@@ -205,7 +206,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         app.get('/skipSms/:uuid', function(req, res) {
             if (!req.params.uuid) {
-                res.status(503).send('Missing data')
+                res.status(503).send('Missing information')
                 return
             }
             db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
@@ -225,9 +226,10 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // user submits phone number, we send a code
         app.post('/smsCode/:uuid', function (req, res) {
             if (!req.params.uuid || !req.body.phone) {
-                res.status(503).send('Missing data')
+                res.status(503).send('Missing information')
                 return
             }
+            console.log(req.body.phone)
             db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
                 if (err || !token) {
                     res.status(503).send('Error verifying uuid')
@@ -236,11 +238,12 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 var code = Math.floor(100000+Math.random()*900000)
                 db.collection('phone').deleteMany({
                     phone: req.body.phone
-                })
-                db.collection('phone').insertOne({
-                    phone: req.body.phone,
-                    code: code,
-                    ts: new Date().getTime()
+                }, function() {
+                    db.collection('phone').insertOne({
+                        phone: req.body.phone,
+                        code: code,
+                        ts: new Date().getTime()
+                    })
                 })
                 var message = 'Verification code: '+code+'. Make sure the domain in your address bar is \'d.tube\' before proceeding.'
                 sms.send(req.body.phone, message)
@@ -251,7 +254,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // user submits the code he received
         app.post('/smsVerify/:uuid', function(req, res) {
             if (!req.params.uuid || !req.body.code || !req.body.phone) {
-                res.status(503).send('Missing data')
+                res.status(503).send('Missing information')
                 return
             }
             db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
@@ -281,7 +284,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // user submits his new public key he jsut generated
         app.post('/confirmKeys/:uuid', function(req, res) {
             if (!req.params.uuid || !req.body.pub) {
-                res.status(503).send('Missing data')
+                res.status(503).send('Missing information')
                 return
             }
             db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
@@ -302,11 +305,11 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // user submits a username
         app.post('/chooseUsername/:uuid', function(req, res) {
             if (!req.params.uuid || !req.body.username) {
-                res.status(503).send('Missing data')
+                res.status(503).send('Missing information')
                 return
             }
-            req.body.username = req.body.username.trim()
-            if (req.body.username.length < 10) {
+            req.body.username = req.body.username.trim().toLowerCase()
+            if (req.body.username.length < 9) {
                 res.status(503).send('Username too short')
                 return
             }
@@ -341,11 +344,11 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                     }
                     javalon.getAccounts([req.body.username], function(err, accounts) {
                         if (err) {
-                            res.status(503).send('Steem API error')
+                            res.status(503).send('Avalon API error')
                             return
                         }
                         if (accounts.length > 0) {
-                            res.status(503).send('Username already taken on STEEM')
+                            res.status(503).send('Username already taken on Avalon')
                             return
                         }
                         db.collection('account').updateOne({
@@ -356,6 +359,31 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                         res.send()
                     })
                 })
+            })
+        })
+
+        // user finalizes his account
+        // user submits a username
+        app.post('/createAccount/:uuid', function(req, res) {
+            console.log(req.params)
+            if (!req.params.uuid || !req.body.optin) {
+                res.status(503).send('Missing information')
+                return
+            }
+            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
+                if (err || !token) {
+                    res.status(503).send('Error verifying uuid')
+                    return
+                }
+                db.collection('account').updateOne({
+                    email: token.email
+                }, {
+                    $set: {
+                        optin: req.body.optin,
+                        finalized: true
+                    }
+                })
+                res.send()
             })
         })
     })

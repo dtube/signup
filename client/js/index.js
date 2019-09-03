@@ -1,6 +1,11 @@
 // email
 myEmail = null
 
+startSignup.onclick = function() {
+    $('#front').hide()
+    $('#step1').show()
+}
+
 afterEmail.onclick = function() {
     var address = email_front.value
     if (validateEmail(address)) {
@@ -12,7 +17,6 @@ afterEmail.onclick = function() {
 
 goBack.onclick = function() {
     $('#step3').hide()
-    $('#step1').show()
     $('#front').show()
 }
 
@@ -88,12 +92,16 @@ backSms.onclick = function() {
 }
 
 sendCode.onclick = function() {
+    var phone = $('#phone').val()
+    var extension = $(".iti__selected-flag")[0].title.split('+')[1]
+    var number = '+'+extension+phone
+    console.log(number)
     axios({
         method: "POST",
         timeout: 15000,
         url: "/smsCode/"+myUuid,
         data: {
-            phone: $('#phone').val() 
+            phone: number
         }
     }).then(function(data) {
         console.log(data)
@@ -107,25 +115,27 @@ sendCode.onclick = function() {
 }
 
 verifySmsCode.onclick = function() {
+    var phone = $('#phone').val()
+    var extension = $(".iti__selected-flag")[0].title.split('+')[1]
+    var number = '+'+extension+phone
     axios({
         method: "POST",
         timeout: 15000,
         url: "/smsVerify/"+myUuid,
         data: {
-            phone: $('#phone').val(),
+            phone: number,
             code: $('#code').val()
         }
     }).then(function(data) {
         console.log(data)
         $('#sms_verif2').hide()
         $('#key_generator').show()
-        progress(4)
+        progress(3)
         var key = javalon.keypair()
         $('#public').val(key.pub)
         $('#private').val(key.priv)
     }).catch(function(err, data) {
         console.log(err.response.data)
-        loadInfo(myUuid)
         toastError(err.response.data)
     })
 }
@@ -144,7 +154,7 @@ confirmKeys.onclick = function() {
         console.log(data)
         $('#key_generator').hide()
         $('#username_choice').show()
-        progress(5)
+        progress(4)
     }).catch(function(err, data) {
         console.log(err.response.data)
         loadInfo(myUuid)
@@ -172,12 +182,34 @@ chooseUsername.onclick = function() {
     })
 }
 
+createAccount.onclick = function() {
+    axios({
+        method: "POST",
+        timeout: 15000,
+        url: "/createAccount/"+myUuid,
+        data: {
+            optin: $("#checkbox3")[0].checked
+        }
+    }).then(function(data) {
+        console.log(data)
+        loadInfo(myUuid)
+    }).catch(function(err, data) {
+        console.log(err.response.data)
+        loadInfo(myUuid)
+        toastError(err.response.data)
+    })
+}
+
 function toastError(message) {
     $("#toastError")[0].innerHTML = message
     $("#toastError").show()
 }
 
 function progress(n) {
+    if (n == -1) {
+        $('#progress').hide()
+        return
+    }
     $('#progress>ul>li').removeClass('active')
     $('#progress>ul>li')[n].classList.add('active')
 }
@@ -209,25 +241,28 @@ function loadInfo(uuid) {
         var account = data.data
         console.log(account)
         myEmail = account.email
-        if (!account.personal_info) {
-            $('#personal_info').show()
-            $('#email').val(myEmail)
-            progress(1)
-            return
-        }
+        // if (!account.personal_info) {
+        //     $('#personal_info').show()
+        //     $('#email').val(myEmail)
+        //     progress(1)
+        //     return
+        // }
         if (!account.facebook) {
             $('#facebook_verif').show()
-            progress(2)
+            progress(1)
             return
         }
         if (!account.phone) {
             $('#sms_verif').show()
-            progress(3)
+            progress(2)
+            $("#phone").intlTelInput({
+                preferredCountries: ["us", "de", "gb", "in", "fr", "kr", "ru", "cn"]
+            });
             return
         }
         if (!account.pub) {
             $('#key_generator').show()
-            progress(4)
+            progress(3)
             var key = javalon.keypair()
             $('#public').val(key.pub)
             $('#private').val(key.priv)
@@ -235,10 +270,18 @@ function loadInfo(uuid) {
         }
         if (!account.username) {
             $('#username_choice').show()
-            progress(5)
+            progress(4)
             return
         }
-        lastStep(account)
+        if (!account.finalized) {
+            accountCreation(account)
+            return
+        }
+        $('#account_creation').hide()
+        $('#congratulations').show()
+        $('#presVideo').height( 9*$('#presVideo').width()/16 )
+        $("#userDisp2")[0].innerHTML = '@'+account.username
+        progress(-1)
         return
     })
     .catch((error) => {
@@ -249,26 +292,27 @@ function loadInfo(uuid) {
     })
 }
 
-function lastStep(account) {
+function accountCreation(account) {
     $('#account_creation').show()
-    $('#progress>ul>li')[6].classList.add('active')
-    var vp = 1000
-    var dtc = 0.2
+    progress(5)
+    var vp = 500
+    var dtc = 0.1
     if (account.facebook === 'skip')
-        $('#rowFacebook')[0].style.textDecoration = 'line-through'
+        unverified($('#rowFacebook'))
     else {
         vp += 500
         dtc += 1
     }
+
     if (account.phone === 'skip')
-        $('#rowPhone')[0].style.textDecoration = 'line-through'
+        unverified($('#rowPhone'))
     else {
         vp += 1000
         dtc += 5
     }
     $("#userDisp")[0].innerHTML = '@'+account.username
-    $("#totalVP")[0].innerHTML = vp
-    $("#totalDTC")[0].innerHTML = dtc
+    $("#totalVP")[0].innerHTML = '+'+vp
+    $("#totalDTC")[0].innerHTML = '+'+dtc
 }
 
 function validateEmail(address) {
@@ -281,6 +325,14 @@ function randomPlacementCaptcha(){
     var randTop = Math.round((Math.random()*window.innerHeight/4))
     document.getElementById('captchaContainer').style.marginLeft = randLeft + 'px'
     document.getElementById('captchaContainer').style.marginTop = randTop + 'px'
+}
+
+function unverified(line) {
+    line[0].style.textDecoration = 'underline'
+    line[0].style.cursor = 'pointer'
+    line.children()[0].innerHTML = "<strong>X</strong>"
+    line.removeClass('green')
+    // line.addClass('red-dtube')
 }
 
 function linkFacebook(token) {
