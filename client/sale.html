@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>DTube Signup</title>
+    <title>DTube Token Sale</title>
     <link rel="shortcut icon" type="image/png" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/spectre.min.css">
     <link rel="stylesheet" href="/css/spectre-exp.min.css">
@@ -19,74 +19,21 @@
             <div class="hero hero-sm">
                 <div class="hero-body">
                     <img width="200" src="https://about.d.tube/img/kit/Logo_White.svg"/>
-                    <div id="front" style="display:none">
-                        <h1>SIGNUP</h1>
-                        <p>
-                            DTube is a new social media where users vote on video and get rewarded.
-                            <br />
-                            Claim your free account and start earning your rewards!
-                            <br />
-                            <h4>No bots allowed</h4>
-                            We want a social media with 100% real humans.<br />
-                            Answer the optional verifications to earn <span class='red-dtube'>Voting Power (VP)</span> and <span class='red-dtube'>DTube Coins (DTC)</span>.
-                            <br /><br />
-                            <table class="table col-4 col-mx-auto">
-                                <thead>
-                                    <tr>
-                                    <th></th>
-                                    <th>Verification</th>
-                                    <th>VP</th>
-                                    <th>DTC</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>✔️</td>
-                                        <td>Email</td>
-                                        <td>+500</td>
-                                        <td>+0.1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>✔️</td>
-                                        <td>Facebook Link</td>
-                                        <td>+500</td>
-                                        <td>+1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>✔️</td>
-                                        <td>Phone Verification</td>
-                                        <td>+1000</td>
-                                        <td>+5</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <br />
-                            <h4>Privacy</h4>
-                            We respect your privacy: no tracking of behaviors, no targeted ads.
-                            <br />Verification steps are not meant to collect data, but to block robots.
-                            <br /><br />
-                            <button id="startSignup" class="btn btn-primary btn-lg">Start</button>
+                    <div id="front">
+                        <h1>DTC TOKEN SALE</h1>
+                        <p>                  
                         </p>
                     </div>
-                    <div id="progress" style='display: none; margin-top: 2rem'>
+                    <div id="progress" style='margin-top: 2rem'>
                         <ul class="step">
-                            <li class="step-item">
-                                <a href="#" class="tooltip" data-tooltip="Email Adress Verification">Email</a>
+                            <li class="step-item active">
+                                <a href="#" class="tooltip" data-tooltip="Login to verify your keys">Login</a>
                             </li>
                             <li class="step-item">
-                                <a href="#" class="tooltip" data-tooltip="Facebook Link">Facebook</a>
+                                <a href="#" class="tooltip" data-tooltip="Enter your personal contact information">Contact Details</a>
                             </li>
                             <li class="step-item">
-                                <a href="#" class="tooltip" data-tooltip="Phone Number Verification">Phone</a>
-                            </li>
-                            <li class="step-item">
-                                <a href="#" class="tooltip" data-tooltip="Keys Generation">Keys</a>
-                            </li>
-                            <li class="step-item">
-                                <a href="#" class="tooltip" data-tooltip="Choose a Username">Username</a>
-                            </li>
-                            <li class="step-item">
-                                <a href="#" class="tooltip" data-tooltip="Creation">Creation</a>
+                                <a href="#" class="tooltip" data-tooltip="Choose your DTC amount and purchase">Purchase DTC</a>
                             </li>
                         </ul>
                     </div>
@@ -94,55 +41,30 @@
             </div>
             <div class="columns">
                 <form id='form' class='form-vertical col-4 col-mx-auto' action='' method='POST'>
-                    <input type="hidden" name="ref" id="ref">
-                    <div id='step1' class="column" style='display:none'>
-                        <div class="form-group">
-                            <label class="form-label" for="birth">Date of birth *</label>
-                            <input class="form-input" name="birth" id="birth" type="date">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="email">Email *</label>
-                            <input class="form-input" type="email" id="email_front" placeholder="Email" name="email">
-                        </div>
-                        <button id="afterEmail" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-arrow-right"></i> Next
-                        </button>
-                    </div>
-                    <div id='step2' class="column" style='display:none'>
-                        <div id='captchaContainer'>
-                            <div class="h-captcha" data-sitekey="7816bec3-01e0-4c93-8252-dec58d7b1da9"></div> 
-                        </div>
-                        <button id="sendEmail" class="btn btn-light btn-lg" type="submit">
-                            <i class="icon icon-mail"></i> Send email
-                        </button>
-                    </div>
-                    <div id='step3' class="column" style='display:none'>
-                        
+                    <div id='step0' class="column" style='display: none'>
                         <p>
-                            <span class="label label-primary">We have sent you an email!</span>
-                            <br /><br />
-                            Check your mailbox and click on the verification link.
+                            Login with your testnet account to confirm you succesfully own valid private keys.
+                            <br /><br />DO NOT LOSE those keys if you want to be able to use your DTCs. DTube does not hold your keys and would not be able to help you.
                         </p>
-                        <button id="goBack" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-arrow-left"></i> Back
-                        </button>
-                        <!--
-                        <button id="closePage" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-cross"></i> Close
-                        </button> -->
-                    </div>
-
-                    <div id="loader" class="loading loading-lg"></div>
-
-                    <div id='personal_info' style='display:none'>
-                        <h3>Personal Information</h3>
-                        <p>Bla bla bla</p>
                         <div class="form-group">
-                            <label class="form-label" for="email">Email *</label>
-                            <input class="form-input" type="email" id="email" disabled>
+                            <label class="form-label" for="fullname">Username</label>
+                            <input class="form-input" type="text" id="username" name="fullname">
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="country">Country of residence *</label>
+                            <label class="form-label" for="priv">Private Key</label>
+                            <input class="form-input" type="password" id="priv" name="priv">
+                        </div>
+                        <br />
+                        <button id="btnStep0" class="btn btn-primary btn-lg" type="button">
+                            <i class="icon icon-arrow-right"></i> Login
+                        </button>
+                    </div>
+                    <div id='step1' class="column" style='display: none'>
+                        <p>
+                            Please make sure to properly fill this information. It would be needed in case of issue requiring a refund.
+                        </p>
+                        <div class="form-group">
+                            <label class="form-label" for="country">Country of residence</label>
                             <select class="form-select" id="country" name="country" style="color: black"> 
                                 <option value="" selected="selected">Select Country</option> 
                                 <option value="United States">United States</option> 
@@ -389,193 +311,54 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="postal">Postal Code *</label>
-                            <input class="form-input" type="text" id="postal">
+                            <label class="form-label" for="email">Contact Email</label>
+                            <input class="form-input" type="email" id="email_front" name="email">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="fullname">Full Name</label>
-                            <input class="form-input" type="text" id="fullname">
+                            <input class="form-input" type="text" id="fullname_front" name="fullname">
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="fulladdress">Full Address</label>
-                            <textarea class="form-input" id="fulladdress" rows="3"></textarea>
+                            <label class="form-label" for="fulladdress">Full Postal Address</label>
+                            <textarea class="form-input" id="fulladdress" rows="4"></textarea>
                         </div>
-
-                        <button id="submitPersonalInfo" class="btn btn-primary btn-lg" type="button">
+                        <div class="form-group form-inline">
+                            <label class="form-checkbox">
+                                <input type="checkbox" id="agreePrivacy">
+                                <i class="form-icon"></i> I have read and agree to the <a href="#">Privacy Policy</a>
+                            </label>
+                        </div>
+                        <br />
+                        <button id="btnStep1" class="btn btn-primary btn-lg" type="button" disabled>
                             <i class="icon icon-arrow-right"></i> Next
                         </button>
                     </div>
-
-                    <div id='facebook_verif' style='display:none'>
-                        <h3>Facebook account</h3>
-                        <p>Link your Facebook account to earn <span class='red-dtube'>+X VP</span> and <span class='red-dtube'>+Y DTC</span></p>
-                        <button id="fbConnect" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-check"></i> Link my FB account
-                        </button>
-                        <br /><br />
-                        <button id="skipFb" class="btn btn-lg" type="button">
-                            <i class="icon icon-arrow-right"></i> Skip
-                        </button>
-                    </div>
-
-                    <div id='sms_verif' style='display:none'>
-                        <h3>SMS Verification</h3>
-                        <p>Verify your phone number to earn <span class='red-dtube'>+X VP</span> and <span class='red-dtube'>+Y DTC</span></p>                        
+                    <div id='step2' class="column" style='display: none'>
                         <div class="form-group">
-                            <label class="form-label" for="phone">Phone Number</label>
-                            <input class="form-input" type="tel" id="phone" placeholder="phone" name="phone">
-                        </div>
-                        <button id="sendCode" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-message"></i> Send code
-                        </button>
-                        <br /><br />
-                        <button id="skipSms" class="btn btn-lg" type="button">
-                            <i class="icon icon-arrow-right"></i> Skip
-                        </button>
-                    </div>
-
-                    <div id='sms_verif2' style='display:none'>
-                        <div class="form-group">
-                            <p>Please enter the 6 digits code sent to your phone number</p>
-                            <label class="form-label" for="code">Code</label>
-                            <input class="form-input" type="text" id="code" placeholder="code" name="code">
-                        </div>
-                        <button id="backSms" class="btn btn-error btn-lg" type="button">
-                            <i class="icon icon-arrow-left"></i> Back
-                        </button>
-                        <button id="verifySmsCode" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-check"></i> Verify Code
-                        </button>
-                    </div>
-                    
-                    <div id='option_payment' style='display:none'>
-                        
-                    </div>
-
-                    <div id='key_generator' style='display:none'>
-                        <h3>Your cryptographic keys</h3>
-                        <p>
-                            <span class='red-dtube'>IMPORTANT:</span> You need to save your keys in a safe place.
-                            <br />
-                            Back them up in multiple ways as they <span class='red-dtube'>will not be recoverable, ever</span>.
-                        </p>
-                        <hr>
-                        <div class="form-group">
-                            <label class="form-label" for="public">Public Key <i>(your blockchain public id)</i></label>
-                            <input class="form-input input-sm" type="text" id="public" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="private">Private Key <i>(keep it secret, like a password)</i></label>
-                            <input class="form-input input-sm" type="text" id="private" disabled>
-                        </div>
-                        <button id="saveKeys" class="btn" type="button">
-                            <i class="icon icon-download"></i> Save keys to disk
-                        </button>
-                        <button id="copyPriv" class="btn" type="button">
-                            <i class="icon icon-copy"></i> Copy private key
-                        </button>
-                        <hr>
-                        <br />
-                        <div class="form-group">
-                            <label class="form-switch">
-                                <input type="checkbox" id="checkbox1">
-                                <i class="form-icon"></i> <i>I understand that my private key will be unrecoverable if I lose it</i>
+                            <h4>DTC Amount:</h4>
+                            <label style='width: 50%' class="form-inline">
+                                <input class="slider" id="dtcslider" type="range" min="0" max="150000" value="50">
+                            </label>
+                            <label class="form-inline" style='width: 20%'>
+                                <input class="input-sm form-input" type="number" id="dtcnumber" min="0" max="150000" value="50">
                             </label>
                         </div>
-                        <div class="form-group">
-                            <label class="form-switch">
-                                <input type="checkbox" id="checkbox2">
-                                <i class="form-icon"></i> <i>I have backed up my private key safely</i>
+                        <br /><br />
+                        <h3>Price: <span id="priceDisp">$5</span></h3>
+                        <p>You will receive the @<span id="usernameDisp"></span> account on DTube mainnet and <span id="dtcDisp"></span> DTC directly inside the account.</p>
+                        <p>This utility token will be yours and owned by your private key, but will only be transferable and usable once the 25M DTC fundraising completes and our main-net launches, likely within the end of the year.</p>
+                        <div class="form-group form-inline">
+                            <label class="form-checkbox">
+                                <input type="checkbox" id="agreeSale">
+                                <i class="form-icon"></i> I have read and agree to the <a href="#">Terms of Sale</a>
                             </label>
                         </div>
                         <br />
-                        <button id="confirmKeys" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-check"></i> Confirm
-                        </button>
-                    </div>
-
-                    <div id='username_choice' style='display:none'>
-                        <h3>Choose a username</h3>
-                        <p>
-                            Your username has to be at least 9 characters long, including 2 digits.
-                        </p>
-                        <div class="form-group">
-                            <label class="form-label" for="username">Username</label>
-                            <input class="form-input" type="text" id="username">
-                        </div>
-                        <br />
-                        <button id="chooseUsername" class="btn btn-primary btn-lg" type="button">
-                            <i class="icon icon-check"></i> Choose username
-                        </button>
-                    </div>
-
-                    <div id='account_creation' style='display:none'>
-                        <h3>Hello <span id="userDisp"></span>!</h3>
-                        <p>This is the final step. Your account will be added to the blockchain now.</p>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                <th></th>
-                                <th>Verification</th>
-                                <th>VP</th>
-                                <th>DTC</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class='green' id='rowEmail'>
-                                    <td>✔️</td>
-                                    <td>Email</td>
-                                    <td>+500</td>
-                                    <td>+0.1</td>
-                                </tr>
-                                <tr class='green' id='rowFacebook'>
-                                    <td>✔️</td>
-                                    <td>Facebook Link</td>
-                                    <td>+500</td>
-                                    <td>+1</td>
-                                </tr>
-                                <tr class='green' id='rowPhone'>
-                                    <td>✔️</td>
-                                    <td>Phone Verification</td>
-                                    <td>+1000</td>
-                                    <td>+5</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <br /><br />
-                        <h3>You account will start with</h3>
-                        <h6>Voting Power: <span class='red-dtube' id='totalVP'></span></h6>
-                        <h6>DTube Coin: <span class='red-dtube' id='totalDTC'></span></h6>
-                        <br />
-                        <div class="form-group col-9">
-                            <label class="form-switch">
-                                <input type="checkbox" id="checkbox3">
-                                <i class="form-icon"></i> <i>Opt-in to receive information from DTube by digital means (email, SMS or Facebook).</i>
-                            </label>
-                        </div>
-                        <br />
-                        <i>By clicking the button below, you are indicating that you have read and agree to the Terms of Service and Privacy Policy</i>
-                        <br /><br />
-                        <button id="createAccount" class="btn btn-success btn-lg" type="button">
-                            <i class="icon icon-arrow-right"></i> Create my account and claim my rewards
-                        </button>
+                        <button id="buySteem" class="btn btn-primary btn-lg" type="button" disabled>Buy with STEEM</button>  
+                        <div class="divider text-center"></div>
+                        <button id="buyOther" class="btn btn-primary btn-lg" type="button" disabled>Buy with BTC and more alts</button>
                     </div>
                 </form>
-            </div>
-            <div id='congratulations' class='col-7' style='display:none'>
-                <h3>Congratulations!</h3>
-                <p>
-                    Welcome <span id="userDisp2"></span>, you are now a DTuber.
-                    <br /><br />
-                    <iframe id="presVideo" src="https://emb.d.tube/#!/ashtv/QmRZMemN8bZ9Pqmk5peZrqjjtgGbCiDSJU7oBZLmuL5ZgP/false"
-                        width="100%"
-                        frameborder="0"
-                        scrolling="no"
-                        webkitallowfullscreen=""
-                        mozallowfullscreen=""
-                        allowfullscreen="">
-                    </iframe>
-                </p>
             </div>
         </center>
     </div>
@@ -587,44 +370,9 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/javalon/bin/javalon.min.js"></script>
     <script src="./js/common.js"></script>
-    <script src="/js/index.js"></script>
+    <script src="./js/sale.js"></script>
     <script>
-        $("#loader").hide()
-        startup()
-        function startup() {
-            var urlParams = new URLSearchParams(location.search)
-            if (urlParams.has('uuid'))
-                localStorage.setItem('uuid', urlParams.get('uuid'))
-
-            myUuid = localStorage.getItem('uuid')
-
-            if (urlParams.has('fb')) {
-                linkFacebook(urlParams.get('fb'))
-                return
-            }
-
-            
-            if (myUuid && myUuid.length > 0) {
-                loadInfo(myUuid)
-                return
-            }
-            
-            if (urlParams.has('kid')) {
-                toastError('You need to be at least 13 years old to get a DTube account')
-            }
-                
-            
-            if (urlParams.has('ok'))
-                $('#step3').show()
-            else {
-                //$('#step1').show()
-                $('#front').show()
-                if (urlParams.has('ref'))
-                    ref.value = urlParams.get('ref')
-            }
-        }
+        $('#step0').show()     
     </script>
-    
-    
 </body>
 </html>

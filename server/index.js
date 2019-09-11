@@ -14,9 +14,14 @@ const sms = require('./sms.js')
 const fb = require('./facebook.js')
 const usernameValidation = require('./username_validation.js')
 
-const MongoClient = require('mongodb').MongoClient;
-const mongoUrl = 'mongodb://localhost:27017';
-const mongoDbName = 'signup';
+var coinbase = require('coinbase-commerce-node')
+var Client = coinbase.Client
+Client.init(config.coinbase.apiKey)
+var Charge = coinbase.resources.Charge
+
+const MongoClient = require('mongodb').MongoClient
+const mongoUrl = 'mongodb://localhost:27017'
+const mongoDbName = 'signup'
 
 const port = process.env.PORT || 3000
 const port_ssl = process.env.PORT_SSL || 443
@@ -385,6 +390,26 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 })
                 res.send()
             })
+        })
+
+        // token sale coinbase
+        app.post('/buyOther/', function(req, res) {
+            console.log(req.body)
+            var chargeData = {
+                'name': 'DTC Round 1 - @'+req.body.username,
+                'description': req.body.amount+' DTCs. Contact email: '+req.body.email,
+                'pricing_type': 'fixed_price',
+                'logo_url': 'https://res.cloudinary.com/commerce/image/upload/v1568140129/sh8bxamfsyrmuwtbut4w.png',
+                'local_price': {
+                    'amount': '100.00',
+                    'currency': 'USD'
+                }
+            }
+            console.log(chargeData)
+            Charge.create(chargeData, function (error, response) {
+              console.log(error);
+              console.log(response);
+            });
         })
     })
 })

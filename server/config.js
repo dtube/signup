@@ -10,6 +10,9 @@ var config = {
     fb: {
         id: process.env.FB_ID || "456",
         secret: process.env.FB_SECRET || "ccc"
+    },
+    coinbase: {
+        apiKey: 'ddd'
     }
 }
 
