@@ -448,7 +448,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             })
         }
         app.use('/webhook/', rawBody)
-        app.post('/webhook/', function(req, res) {
+        app.post('/webhook/', function(request, response) {
             console.log(request.headers)
             try {
                 event = Webhook.verifyEventBody(
