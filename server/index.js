@@ -19,6 +19,7 @@ var coinbase = require('coinbase-commerce-node')
 var Client = coinbase.Client
 Client.init(config.coinbase.apiKey)
 var Charge = coinbase.resources.Charge
+var Webhook = coinbase.Webhook
 
 const MongoClient = require('mongodb').MongoClient
 const mongoUrl = 'mongodb://localhost:27017'
@@ -433,6 +434,11 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             res.send(charge)
             charge.personal_info = req.body
             db.collection('charges').insertOne(charge)
+        })
+
+        app.post('/webhook/', function(req, res) {
+            console.log(req.body)
+            res.send()
         })
     })
 })
