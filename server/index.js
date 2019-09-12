@@ -13,6 +13,7 @@ const captcha = require('./captcha.js')
 const sms = require('./sms.js')
 const fb = require('./facebook.js')
 const usernameValidation = require('./username_validation.js')
+const STEEM_DTC = 0.67
 
 var coinbase = require('coinbase-commerce-node')
 var Client = coinbase.Client
@@ -394,22 +395,44 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         // token sale coinbase
         app.post('/buyOther/', function(req, res) {
-            console.log(req.body)
+            var price = 0.10*parseInt(req.body.amount)
+            price = price.toFixed(2)
             var chargeData = {
-                'name': 'DTC Round 1 - @'+req.body.username,
-                'description': req.body.amount+' DTCs. Contact email: '+req.body.email,
+                'name': 'DTC Round 1',
+                'description': req.body.amount+' DTC to @'+req.body.username,
                 'pricing_type': 'fixed_price',
                 'logo_url': 'https://res.cloudinary.com/commerce/image/upload/v1568140129/sh8bxamfsyrmuwtbut4w.png',
                 'local_price': {
-                    'amount': '100.00',
+                    'amount': price,
                     'currency': 'USD'
                 }
             }
-            console.log(chargeData)
-            Charge.create(chargeData, function (error, response) {
-              console.log(error);
-              console.log(response);
+            Charge.create(chargeData, function (error, charge) {
+                if (error) {
+                    res.status(503).send('Coinbase error')
+                    return
+                }
+                res.send(charge.code)
+                console.log('New Coinbase Charge '+req.body.amount+' DTC '+charge.code)
+                charge.personal_info = req.body
+                db.collection('charges').insertOne(charge)
+                
             });
+        })
+
+        // token sale steem
+        app.post('/buySteem/', function(req, res) {
+            var price = STEEM_DTC*parseInt(req.body.amount)
+            price = price.toFixed(3)
+            console.log('New Steem Charge '+req.body.amount+' DTC ')
+            var charge = {
+                price: price,
+                ts: new Date().getTime(),
+                uuid: uuidv1(),
+            }
+            res.send(charge)
+            charge.personal_info = req.body
+            db.collection('charges').insertOne(charge)
         })
     })
 })

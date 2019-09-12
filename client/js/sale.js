@@ -86,7 +86,35 @@ function calcPrice(dtc) {
 }
 
 buySteem.onclick = function() {
+    axios({
+        method: "POST",
+        timeout: 15000,
+        url: "/buySteem/",
+        data: {
+            username: $('#username').val(),
+            // pub: javalon.privToPub($('#priv').val()),
+            pub: 'uNc0MM3nTm3',
+            country: $('#country').val(),
+            email: $('#email_front').val(),
+            fullname: $('#fullname_front').val(),
+            fulladdress: $('#fulladdress').val(),
+            amount: $('#dtcnumber').val()
+        }
+    }).then(function(data) {
+        var charge = data.data
+        console.log(charge)
+        $('#amountSteem')[0].innerHTML = charge.price
+        $('#memoSteem')[0].innerHTML = charge.uuid
 
+        if (typeof steem_keychain != 'undefined') {
+            $('#buyKeychain').prop('disabled', false)
+        }
+
+        $('.modal').addClass('active')
+    }).catch(function(err, data) {
+        console.log(err.response.data)
+        toastError(err.response.data)
+    })
 }
 
 buyOther.onclick = function() {
@@ -105,10 +133,30 @@ buyOther.onclick = function() {
             amount: $('#dtcnumber').val()
         }
     }).then(function(data) {
-        
+        var code = data.data
+        window.location.href = "https://commerce.coinbase.com/charges/"+code
     }).catch(function(err, data) {
         console.log(err.response.data)
         toastError(err.response.data)
     })
+}
+
+closeModal.onclick = function() {
+    $('.modal').removeClass('active')
+}
+
+buySteemconnect.onclick = function() {
+    window.location.href = "https://steemconnect.com/sign/transfer?to=dtube&amount="
+    +$('#amountSteem')[0].innerHTML
+    +"&memo="
+    +$('#memoSteem')[0].innerHTML
+}
+
+buyKeychain.onclick = function() {
+    var amount = $('#amountSteem')[0].innerHTML
+    var currency = 'STEEM'
+    steem_keychain.requestTransfer($('#username').val(), 'dtube', amount, $('#memoSteem')[0].innerHTML, currency, function(response) {
+        console.log(response);
+    }, false);
 }
 

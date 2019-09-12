@@ -12,7 +12,7 @@ var config = {
         secret: process.env.FB_SECRET || "ccc"
     },
     coinbase: {
-        apiKey: 'ddd'
+        apiKey: process.env.COINBASE_API || 'ddd'
     }
 }
 

@@ -362,6 +362,28 @@
             </div>
         </center>
     </div>
+    <div class="modal">
+        <a href="#close" class="modal-overlay" aria-label="Close"></a>
+        <div class="modal-container">
+            <div class="modal-header">
+                <a class="btn btn-clear float-right" id='closeModal' href="#modals-sizes" aria-label="Close"></a>
+                <div class="modal-title h5">Pay with STEEM</div>
+            </div>
+            <div class="modal-body">
+                <div class="content" style="color: black">
+                    <p>
+                        Amount: <code><span id='amountSteem'>XXX</span> STEEM</code>
+                        <br />To: <code>@dtube</code>
+                        <br />Memo: <code><span id='memoSteem'>qweqwe</span></code>
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="buyKeychain" class="btn btn-primary" type="button" disabled>KeyChain</button>
+                <button id="buySteemconnect" class="btn btn-primary" type="button">SteemConnect</button>
+            </div>
+        </div>
+    </div>
     <center>
         <div id="toastError" class="toast toast-primary" style="display: none; position: fixed; top: 0px;"></div>
     </center>
@@ -371,6 +393,7 @@
     <script src="https://unpkg.com/javalon/bin/javalon.min.js"></script>
     <script src="./js/common.js"></script>
     <script src="./js/sale.js"></script>
+    </script>
     <script>
         $('#step0').show()     
     </script>
