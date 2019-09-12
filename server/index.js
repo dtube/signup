@@ -436,9 +436,33 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             db.collection('charges').insertOne(charge)
         })
 
+        function rawBody(req, res, next) {
+            req.setEncoding('utf8')
+            var data = ''
+            req.on('data', function (chunk) {
+                data += chunk
+            })
+            req.on('end', function () {
+                req.rawBody = data
+                next()
+            })
+        }
+        app.use('/webhook/', rawBody)
         app.post('/webhook/', function(req, res) {
-            console.log(req.body)
-            res.send()
+            console.log(request.headers)
+            try {
+                event = Webhook.verifyEventBody(
+                    request.rawBody,
+                    request.headers['x-cc-webhook-signature'],
+                    webhookSecret
+                )
+            } catch (error) {
+                console.log('Error occured', error.message)
+                return response.status(400).send('Webhook Error:' + error.message);
+            }
+        
+            console.log('Success', event.id)
+            response.status(200).send('Signed Webhook Received: ' + event.id)
         })
     })
 })
