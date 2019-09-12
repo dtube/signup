@@ -454,7 +454,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 event = Webhook.verifyEventBody(
                     request.rawBody,
                     request.headers['x-cc-webhook-signature'],
-                    webhookSecret
+                    config.coinbase.secret
                 )
             } catch (error) {
                 console.log('Error occured', error.message)
