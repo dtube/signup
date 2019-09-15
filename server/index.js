@@ -42,6 +42,7 @@ app.use(express.json())
 app.use(express.static('client',{ dotfiles: 'allow' }))
 app.use(fb.initialize());
 app.use(fb.session());
+app.enable('trust proxy')
 
 db = null
 MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
@@ -354,7 +355,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             }
             verifToken(req, res, function(token) {
                 if (!token) return
-                
+
                 db.collection('account').updateOne({
                     email: token.email
                 }, {
@@ -436,8 +437,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 })
 
 function verifToken(req, res, cb) {
-    var ip_addr = req.headers['X-FORWARDED-FOR'] || req.connection.remoteAddress
-    console.log(ip_addr)
+    var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
         if (err || !token) {
             res.status(503).send('Error verifying uuid')
@@ -445,5 +445,11 @@ function verifToken(req, res, cb) {
             return
         }
         cb(token)
+
+        if (!token.ip || token.ip.indexOf(ip_addr) === -1) {
+            db.collection('tokens').updateOne({_id: token._id}, {
+                "$push": {ip: ip_addr}
+            })
+        }
     })
 }
