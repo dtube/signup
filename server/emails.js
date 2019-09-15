@@ -40,6 +40,23 @@ var emails = {
             }
         });
     },
+    sendContact: (recipient, subject, text, ip, cb) => {
+        if (recipient.split('@')[1] !== 'd.tube')  {
+            cb('A contact email requires a @d.tube recipient.')
+            return
+        }
+        var htmlText = text.replace('\n','<br/>')
+        transporter.sendMail({
+            from: '"DTube Bot" <no-reply@d.tube>',
+            to: recipient,
+            subject: subject,
+            text: text,
+            html: htmlText
+        }, function(err, res) {
+            if (err) cb(err)
+            else cb(null, res)
+        });
+    },
     validate: (recipient) => {
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return re.test(recipient)

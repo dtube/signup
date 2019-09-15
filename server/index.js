@@ -101,6 +101,28 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         })
 
         // captcha + email verification
+        app.post('/contact', function (req, res) {
+            if (!req.body.email || !req.body['h-captcha-response'] || !req.body.text || !req.body.subject) {
+                res.status(400).send('Missing information')
+                return
+            }
+            captcha.check(req.body['h-captcha-response'], function(err) {
+                if (err) {
+                    res.status(400).send('Error verifying captcha')
+                    return
+                }
+                var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+                emails.sendContact(req.body.email, req.body.subject, req.body.text, ip_addr, function(err, success) {
+                    if (!err) {
+                        res.redirect('/?ok')
+                    } else {
+                        res.status(400).send(err)
+                    }
+                })
+            })
+        })
+
+        // captcha + email verification
         app.post('/', function (req, res) {
             if (!req.body.email || !req.body['h-captcha-response'] || !req.body.birth) {
                 res.status(400).send('Missing information')
