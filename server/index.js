@@ -436,9 +436,28 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             db.collection('charges').insertOne(charge)
         })
 
+        // coinbase verify payments
         app.post('/webhook/', function(req, res) {
-            console.log(req.body)
-            res.send()
+            var signature = req.headers['x-cc-webhook-signature']
+            //console.log(signature, req.body)
+            try {
+                event = Webhook.verifyEventBody(
+                        JSON.stringify(req.body),
+                        signature,
+                        config.coinbase.secret
+                );
+            } catch (error) {
+                console.log('Error occured', error.message);
+                res.status(400).send('Webhook Error:' + error.message);
+                return;
+            }
+            res.send('Signed Webhook Received: ' + event.id);
+            var status = event.type
+            console.log('Coinbase '+status+' '+event.data.code)
+            db.collection('charges').updateOne({id: event.data.id}, {"$set": {
+                "status": status,
+                "timeline": event.data.timeline
+            }})
         })
     })
 })
