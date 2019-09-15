@@ -16,10 +16,10 @@ var config = {
         secret: process.env.COINBASE_SECRET || 'eee'
     },
     limits: {
-        smsCount: 1,
+        smsCount: 2,
         smsPeriod: 1000*60*60,
-        emailCount: 1,
-        emailPeriod: 1000*60,
+        emailCount: 5,
+        emailPeriod: 1000*60*5,
         smsCodeAttempts: 3
     }
 }

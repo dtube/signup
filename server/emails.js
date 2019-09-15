@@ -14,7 +14,7 @@ var emails = {
             return
         }
         if (emails.limited(recipient, ip)) {
-            cb('Maximum rate limit exceeded. Please wait and try again.')
+            cb('Maximum rate limit exceeded. Please wait a few minutes and try again.')
             return
         }
         var link = config.protocol+config.domain+'/?uuid='+uuid

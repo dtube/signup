@@ -90,7 +90,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             }
             captcha.check(req.body['h-captcha-response'], function(err) {
                 if (err) {
-                    res.status(503).send('Error verifying captcha')
+                    res.status(400).send('Error verifying captcha')
                     return
                 }
                 var uuid = uuidv1()
@@ -107,7 +107,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             res.redirect('/?ok')
                         })
                     } else {
-                        res.status(503).send(err)
+                        res.status(400).send(err)
                     }
                 })
             })
@@ -119,7 +119,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 if (!token) return
                 db.collection('account').findOne({email: token.email}, function(err, acc) {
                     if (err) {
-                        res.status(503).send('Database error')
+                        res.status(400).send('Database error')
                         return
                     }
                     if (!acc) {
@@ -139,12 +139,12 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // user submits personal info
         app.post('/personalInfo/:uuid', function (req, res) {
             if (!req.params.uuid || !req.body.personal_info) {
-                res.status(503).send('Missing information')
+                res.status(400).send('Missing information')
                 return
             }
             var info = req.body.personal_info
             if (!info.postal || !info.country) {
-                res.status(503).send('Missing information')
+                res.status(400).send('Missing information')
                 return
             }
             verifToken(req, res, function(token) {
@@ -160,7 +160,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // facebook connect
         app.get('/skipFb/:uuid', function(req, res) {
             if (!req.params.uuid) {
-                res.status(503).send('Missing information')
+                res.status(400).send('Missing information')
                 return
             }
             verifToken(req, res, function(token) {
@@ -187,7 +187,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         app.get('/linkFacebook/:token/:uuid', function(req, res) {
             if (!req.params.token || !req.params.uuid) {
-                res.status(503).send('Missing information')
+                res.status(400).send('Missing information')
                 return
             }
             verifToken(req, res, function(token) {
@@ -195,7 +195,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
                 db.collection('facebook').findOne({accessToken: req.params.token}, function(err, facebook) {
                     if (!facebook) {
-                        res.status(503).send('Error linking facebook')
+                        res.status(400).send('Error linking facebook')
                         return
                     }
                     db.collection('account').updateOne({email: token.email}, {
@@ -210,7 +210,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         app.get('/skipSms/:uuid', function(req, res) {
             if (!req.params.uuid) {
-                res.status(503).send('Missing information')
+                res.status(400).send('Missing information')
                 return
             }
             verifToken(req, res, function(token) {
@@ -227,10 +227,9 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // user submits phone number, we send a code
         app.post('/smsCode/:uuid', function (req, res) {
             if (!req.params.uuid || !req.body.phone) {
-                res.status(503).send('Missing information')
+                res.status(400).send('Missing information')
                 return
             }
-            console.log(req.body.phone)
             verifToken(req, res, function(token) {
                 if (!token) return
 
@@ -241,20 +240,26 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                     db.collection('phone').insertOne({
                         phone: req.body.phone,
                         code: code,
-                        ts: new Date().getTime()
+                        ts: new Date().getTime(),
+                        attempts: 0
                     })
                 })
                 var message = 'Verification code: '+code+'. Make sure the domain in your address bar is \'d.tube\' before proceeding.'
                 var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-                sms.send(req.body.phone, message, ip_addr)
-                res.send()
+                sms.send(req.body.phone, message, ip_addr, function(err) {
+                    if (err) {
+                        res.status(429).send(err)
+                    }
+                    res.send()
+                })
+                
             })
         })
 
         // user submits the code he received
         app.post('/smsVerify/:uuid', function(req, res) {
             if (!req.params.uuid || !req.body.code || !req.body.phone) {
-                res.status(503).send('Missing information')
+                res.status(400).send('Missing information')
                 return
             }
             verifToken(req, res, function(token) {
@@ -265,23 +270,54 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                     code: parseInt(req.body.code)
                 }, function(err, phone) {
                     if (!phone) {
-                        res.status(503).send('Error verifying phone number')
-                        return
+                        // not verified !!
+                        db.collection('phone').findOne({
+                            phone: req.body.phone
+                        }, function(err, phone) {
+                            if (phone) {
+                                if (phone.attempts < config.limits.smsCodeAttempts-1) {
+                                    db.collection('phone').updateOne({
+                                        phone: req.body.phone
+                                    }, {
+                                        "$inc": {attempts: 1}
+                                    }, function() {
+                                        res.status(400).send('Did you just type a wrong code? '
+                                            +(config.limits.smsCodeAttempts - phone.attempts - 1)
+                                            +' attempts remaining.')
+                                        return                                        
+                                    })
+                                } else {
+                                    db.collection('phone').updateOne({
+                                        phone: req.body.phone
+                                    }, {
+                                        "$inc": {attempts: 1}
+                                    }, function() {
+                                        res.status(400).send('You failed 3 attempts in a row.')
+                                        return                                        
+                                    })
+                                }
+                            } else {
+                                res.status(400).send('Error verifying phone number.')
+                                return
+                            }
+                        })
+                    } else {
+                        // verified !
+                        db.collection('account').updateOne({
+                            email: token.email
+                        }, {
+                            $set: {phone: req.body.phone}
+                        })
+                        res.send()
                     }
-                    db.collection('account').updateOne({
-                        email: token.email
-                    }, {
-                        $set: {phone: req.body.phone}
-                    })
-                    res.send()
                 })
             })
         })
 
-        // user submits his new public key he jsut generated
+        // user submits the new public key he just generated
         app.post('/confirmKeys/:uuid', function(req, res) {
             if (!req.params.uuid || !req.body.pub) {
-                res.status(503).send('Missing information')
+                res.status(400).send('Missing information')
                 return
             }
             verifToken(req, res, function(token) {
@@ -299,16 +335,16 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // user submits a username
         app.post('/chooseUsername/:uuid', function(req, res) {
             if (!req.params.uuid || !req.body.username) {
-                res.status(503).send('Missing information')
+                res.status(400).send('Missing information')
                 return
             }
             req.body.username = req.body.username.trim().toLowerCase()
             if (req.body.username.length < 9) {
-                res.status(503).send('Username too short')
+                res.status(400).send('Username too short')
                 return
             }
             if (req.body.username.replace(/[^0-9]/g,"").length < 2) {
-                res.status(503).send('Username needs to contain at least two digits')
+                res.status(400).send('Username needs to contain at least two digits')
                 return
             }
             if (!usernameValidation(
@@ -318,7 +354,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 'abcdefghijklmnopqrstuvwxyz0123456789',
                 '-.'
             )) {
-                res.status(503).send('Invalid username')
+                res.status(400).send('Invalid username')
                 return
             }
             verifToken(req, res, function(token) {
@@ -330,7 +366,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                         return
                     }
                     if (accounts.length > 0) {
-                        res.status(503).send('Username already taken on STEEM')
+                        res.status(400).send('Username already taken on STEEM')
                         return
                     }
                     javalon.getAccounts([req.body.username], function(err, accounts) {
@@ -339,7 +375,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             return
                         }
                         if (accounts.length > 0) {
-                            res.status(503).send('Username already taken on Avalon')
+                            res.status(400).send('Username already taken on Avalon')
                             return
                         }
                         db.collection('account').updateOne({
@@ -358,7 +394,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         app.post('/createAccount/:uuid', function(req, res) {
             console.log(req.params)
             if (!req.params.uuid || !req.body.optin) {
-                res.status(503).send('Missing information')
+                res.status(400).send('Missing information')
                 return
             }
             verifToken(req, res, function(token) {
@@ -448,7 +484,7 @@ function verifToken(req, res, cb) {
     var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
         if (err || !token) {
-            res.status(503).send('Error verifying uuid')
+            res.status(400).send('Error verifying uuid')
             cb(null)
             return
         }

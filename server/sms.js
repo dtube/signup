@@ -1,11 +1,15 @@
 const aws = require('./aws.js')
 const sns = new aws.SNS({region: "eu-west-1"})
+const config = require('./config.js')
 
 var sms = {
     sent: [],
     send: (phoneNumber, message, ip, cb) => {
+        if (phoneNumber.split('+').length > 2)
+            phoneNumber = '+' + phoneNumber.split('+')[phoneNumber.split('+').length - 1]
+        
         if (sms.limited(phoneNumber, ip)) {
-            cb('Maximum rate limit exceeded. Please wait and try again.')
+            cb('Maximum rate limit exceeded. Please wait a few hours and try again.')
             return
         }
         sns.publish({
@@ -13,6 +17,7 @@ var sms = {
             PhoneNumber: phoneNumber
         }, function(err, result) {
             if (!err) {
+                cb()
                 sms.sent.push({
                     phoneNumber: phoneNumber,
                     ts: new Date().getTime(),
@@ -21,7 +26,7 @@ var sms = {
             }
         })
     },
-    limited: (recipient, ip) => {
+    limited: (phoneNumber, ip) => {
         var countRecipient = 0
         var countIp = 0
         for (let i = sms.sent.length-1; i >= 0; i--) {
