@@ -2,22 +2,19 @@ const nodemailer = require('nodemailer')
 const aws = require('./aws.js')
 const config = require('./config.js')
 
-// let transporter = nodemailer.createTransport({
-//     sendmail: true
-// });
 let transporter = nodemailer.createTransport({
     SES: new aws.SES({region: "eu-west-1"})
 });
-// let transporter = nodemailer.createTransport({
-//     host: "smtp.free.fr",
-//     port: 25,
-//     secure: false
-// });
 
 var emails = {
-    send: (recipient, subject, uuid, cb) => {
+    sent: [],
+    send: (recipient, subject, uuid, ip, cb) => {
         if (!emails.validate(recipient)) {
             cb(recipient+' is not a valid email')
+            return
+        }
+        if (emails.limited(recipient, ip)) {
+            cb('Maximum rate limit exceeded. Please wait and try again.')
             return
         }
         var link = config.protocol+config.domain+'/?uuid='+uuid
@@ -33,13 +30,45 @@ var emails = {
             html: htmlText
         }, function(err, res) {
             if (err) cb(err)
-            else cb(null, res)
+            else {
+                cb(null, res)
+                emails.sent.push({
+                    recipient: recipient,
+                    ts: new Date().getTime(),
+                    ip: ip
+                })
+            }
         });
     },
     validate: (recipient) => {
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return re.test(recipient)
+    },
+    limited: (recipient, ip) => {
+        var countRecipient = 0
+        var countIp = 0
+        for (let i = emails.sent.length-1; i >= 0; i--) {
+            if (emails.sent[i].recipient == recipient)
+                countRecipient++
+            if (emails.sent[i].ip == ip)
+                countIp++
+        }
+
+        if (countRecipient >= config.limits.emailCount || countIp >= config.limits.emailCount)
+            return true
+
+        return false
+    },
+    purge: () => {
+        for (let i = emails.sent.length-1; i >= 0; i--) {
+            if (emails.sent[i].ts < new Date().getTime() - config.limits.emailPeriod)
+                emails.sent.splice(i, 1)
+        }
     }
 }
+
+setInterval(function() {
+    emails.purge();
+}, 1000*60)
 
 module.exports = emails

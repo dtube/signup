@@ -14,6 +14,13 @@ var config = {
     coinbase: {
         apiKey: process.env.COINBASE_API || 'ddd',
         secret: process.env.COINBASE_SECRET || 'eee'
+    },
+    limits: {
+        smsCount: 1,
+        smsPeriod: 1000*60*60,
+        emailCount: 1,
+        emailPeriod: 1000*60,
+        smsCodeAttempts: 3
     }
 }
 

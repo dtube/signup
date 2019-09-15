@@ -69,6 +69,14 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         }  
         console.log(`HTTP Server listening on port ${port}!`)
 
+        app.get('/debug', function (req, res) {
+            var debug = {
+                email: emails.sent,
+                sms: sms.sent
+            }
+            res.send(debug)
+        })
+
         // captcha + email verification
         app.post('/', function (req, res) {
             if (!req.body.email || !req.body['h-captcha-response'] || !req.body.birth) {
@@ -82,12 +90,12 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             }
             captcha.check(req.body['h-captcha-response'], function(err) {
                 if (err) {
-                    console.log(err)
                     res.status(503).send('Error verifying captcha')
                     return
                 }
                 var uuid = uuidv1()
-                emails.send(req.body.email, 'DTube Signup', uuid, function(err, success) {
+                var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+                emails.send(req.body.email, 'DTube Signup', uuid, ip_addr, function(err, success) {
                     if (!err) {
                         db.collection('tokens').insertOne({
                             _id: uuid,
@@ -98,9 +106,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             if (err) throw err;
                             res.redirect('/?ok')
                         })
-                    } else { 
-                        console.log(err)
-                        res.status(503).send('Error sending email')
+                    } else {
+                        res.status(503).send(err)
                     }
                 })
             })
@@ -238,7 +245,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                     })
                 })
                 var message = 'Verification code: '+code+'. Make sure the domain in your address bar is \'d.tube\' before proceeding.'
-                sms.send(req.body.phone, message)
+                var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+                sms.send(req.body.phone, message, ip_addr)
                 res.send()
             })
         })
