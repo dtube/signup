@@ -92,7 +92,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                     for (let i = 0; i < chargesPending.length; i++)
                         pending += parseInt(chargesPending[i].personal_info.amount)
                     res.send({
-                        max: 1000000,
+                        max: config.limits.maxTokensSold,
                         confirmed: confirmed,
                         pending: pending
                     })
