@@ -77,6 +77,29 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             res.send(debug)
         })
 
+        app.get('/bar', function (req, res) {
+            var confirmed = 0
+            var pending = 0
+            db.collection('charges').find({
+                status: 'charge:completed'
+            }).toArray(function(err, chargesCompleted) {
+                for (let i = 0; i < chargesCompleted.length; i++)
+                    confirmed += parseInt(chargesCompleted[i].personal_info.amount)
+
+                db.collection('charges').find({
+                    status: 'charge:pending'
+                }).toArray(function(err, chargesPending) {
+                    for (let i = 0; i < chargesPending.length; i++)
+                        pending += parseInt(chargesPending[i].personal_info.amount)
+                    res.send({
+                        max: 1000000,
+                        confirmed: confirmed,
+                        pending: pending
+                    })
+                })
+            })
+        })
+
         // captcha + email verification
         app.post('/', function (req, res) {
             if (!req.body.email || !req.body['h-captcha-response'] || !req.body.birth) {
