@@ -107,11 +107,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         // user clicks the email link
         app.get('/signup/:uuid', function (req, res) {
-            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
-                if (err || !token) {
-                    res.status(503).send('Error verifying uuid')
-                    return
-                }
+            verifToken(req, res, function(token) {
+                if (!token) return
                 db.collection('account').findOne({email: token.email}, function(err, acc) {
                     if (err) {
                         res.status(503).send('Database error')
@@ -142,11 +139,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.status(503).send('Missing information')
                 return
             }
-            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
-                if (err || !token) {
-                    res.status(503).send('Error verifying uuid')
-                    return
-                }
+            verifToken(req, res, function(token) {
+                if (!token) return
                 db.collection('account').updateOne({email: token.email}, {
                     $set: {personal_info: req.body.personal_info}
                 }, function() {
@@ -161,11 +155,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.status(503).send('Missing information')
                 return
             }
-            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
-                if (err || !token) {
-                    res.status(503).send('Error verifying uuid')
-                    return
-                }
+            verifToken(req, res, function(token) {
+                if (!token) return
 
                 db.collection('account').updateOne({email: token.email}, {
                     $set: {facebook: 'skip'}
@@ -191,11 +182,9 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.status(503).send('Missing information')
                 return
             }
-            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
-                if (err || !token) {
-                    res.status(503).send('Error verifying uuid')
-                    return
-                }
+            verifToken(req, res, function(token) {
+                if (!token) return
+
                 db.collection('facebook').findOne({accessToken: req.params.token}, function(err, facebook) {
                     if (!facebook) {
                         res.status(503).send('Error linking facebook')
@@ -216,11 +205,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.status(503).send('Missing information')
                 return
             }
-            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
-                if (err || !token) {
-                    res.status(503).send('Error verifying uuid')
-                    return
-                }
+            verifToken(req, res, function(token) {
+                if (!token) return
 
                 db.collection('account').updateOne({email: token.email}, {
                     $set: {phone: 'skip'}
@@ -237,11 +223,9 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 return
             }
             console.log(req.body.phone)
-            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
-                if (err || !token) {
-                    res.status(503).send('Error verifying uuid')
-                    return
-                }
+            verifToken(req, res, function(token) {
+                if (!token) return
+
                 var code = Math.floor(100000+Math.random()*900000)
                 db.collection('phone').deleteMany({
                     phone: req.body.phone
@@ -264,11 +248,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.status(503).send('Missing information')
                 return
             }
-            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
-                if (err || !token) {
-                    res.status(503).send('Error verifying uuid')
-                    return
-                }
+            verifToken(req, res, function(token) {
+                if (!token) return
                 
                 db.collection('phone').findOne({
                     phone: req.body.phone,
@@ -294,11 +275,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.status(503).send('Missing information')
                 return
             }
-            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
-                if (err || !token) {
-                    res.status(503).send('Error verifying uuid')
-                    return
-                }
+            verifToken(req, res, function(token) {
+                if (!token) return
 
                 db.collection('account').updateOne({
                     email: token.email
@@ -334,11 +312,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.status(503).send('Invalid username')
                 return
             }
-            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
-                if (err || !token) {
-                    res.status(503).send('Error verifying uuid')
-                    return
-                }
+            verifToken(req, res, function(token) {
+                if (!token) return
 
                 steem.api.getAccounts([req.body.username], function(err, accounts) {
                     if (err) {
@@ -377,11 +352,9 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.status(503).send('Missing information')
                 return
             }
-            db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
-                if (err || !token) {
-                    res.status(503).send('Error verifying uuid')
-                    return
-                }
+            verifToken(req, res, function(token) {
+                if (!token) return
+                
                 db.collection('account').updateOne({
                     email: token.email
                 }, {
@@ -461,3 +434,16 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         })
     })
 })
+
+function verifToken(req, res, cb) {
+    var ip_addr = req.headers['X-FORWARDED-FOR'] || req.connection.remoteAddress
+    console.log(ip_addr)
+    db.collection('tokens').findOne({_id: req.params.uuid}, function(err, token) {
+        if (err || !token) {
+            res.status(503).send('Error verifying uuid')
+            cb(null)
+            return
+        }
+        cb(token)
+    })
+}
