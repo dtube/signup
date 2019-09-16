@@ -14,6 +14,7 @@ const captcha = require('./captcha.js')
 const sms = require('./sms.js')
 const fb = require('./facebook.js')
 const usernameValidation = require('./username_validation.js')
+const steemStreamer = require('./steemStreamer.js')
 const STEEM_DTC = 0.67
 
 var coinbase = require('coinbase-commerce-node')
@@ -52,7 +53,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
     if (err) throw err;
     console.log("Connected successfully to database");
     db = client.db(mongoDbName);
-    http.createServer(app).listen(port, () => {
+    steemStreamer.start(db)
+    http.createServer(app).listen(port, 'localhost', () => {
         if (config.ssl) {
             const privateKey = fs.readFileSync('/etc/letsencrypt/live/'+config.domain+'/privkey.pem', 'utf8');
             const certificate = fs.readFileSync('/etc/letsencrypt/live/'+config.domain+'/cert.pem', 'utf8');
@@ -66,7 +68,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         
             console.log('SSL enabled')
             //app.use(enforce.HTTPS({ trustProtoHeader: true }))
-            https.createServer(credentials, app).listen(port_ssl, () => {
+            https.createServer(credentials, app).listen(port_ssl, 'localhost', () => {
                 console.log(`HTTPS Server listening on port ${port_ssl}!`)
             })
         }  
