@@ -81,10 +81,10 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             var confirmed = 0
             var pending = 0
             db.collection('charges').find({
-                status: 'charge:completed'
-            }).toArray(function(err, chargesCompleted) {
-                for (let i = 0; i < chargesCompleted.length; i++)
-                    confirmed += parseInt(chargesCompleted[i].personal_info.amount)
+                status: 'charge:confirmed'
+            }).toArray(function(err, chargesConfirmed) {
+                for (let i = 0; i < chargesConfirmed.length; i++)
+                    confirmed += parseInt(chargesConfirmed[i].personal_info.amount)
 
                 db.collection('charges').find({
                     status: 'charge:pending'
