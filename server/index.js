@@ -39,6 +39,7 @@ process.on('SIGINT', function() {
 // express server
 const app = express()
 app.use(helmet())
+app.set('env', 'production')
 app.use(express.urlencoded())
 app.use(express.json())
 app.use(express.static('client',{ dotfiles: 'allow' }))
