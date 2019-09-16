@@ -226,7 +226,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         );
         
         app.get('/auth/facebook/callback',
-        fb.authenticate('facebook', { failureRedirect: '/error' }),
+        fb.authenticate('facebook', { failureRedirect: '/?fberror=1' }),
         function(req, res) {
             // Successful authentication, redirect home.
             res.redirect('/?fb='+req.user.accessToken);
@@ -440,7 +440,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // user submits a username
         app.post('/createAccount/:uuid', function(req, res) {
             console.log(req.params)
-            if (!req.params.uuid || !req.body.optin) {
+            if (!req.params.uuid || typeof req.body.optin == 'undefined') {
                 res.status(400).send('Missing information')
                 return
             }

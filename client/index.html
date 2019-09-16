@@ -612,6 +612,10 @@
             if (urlParams.has('kid')) {
                 toastError('You need to be at least 13 years old to get a DTube account')
             }
+
+            if (urlParams.has('fberror')) {
+                toastError('Error connecting with Facebook')
+            }
                 
             
             if (urlParams.has('ok'))
