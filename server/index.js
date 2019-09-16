@@ -54,7 +54,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
     console.log("Connected successfully to database");
     db = client.db(mongoDbName);
     steemStreamer.start(db)
-    http.createServer(app).listen(port, 'localhost', () => {
+    http.createServer(app).listen(port, '::1', () => {
         if (config.ssl) {
             const privateKey = fs.readFileSync('/etc/letsencrypt/live/'+config.domain+'/privkey.pem', 'utf8');
             const certificate = fs.readFileSync('/etc/letsencrypt/live/'+config.domain+'/cert.pem', 'utf8');
@@ -68,7 +68,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         
             console.log('SSL enabled')
             //app.use(enforce.HTTPS({ trustProtoHeader: true }))
-            https.createServer(credentials, app).listen(port_ssl, 'localhost', () => {
+            https.createServer(credentials, app).listen(port_ssl, () => {
                 console.log(`HTTPS Server listening on port ${port_ssl}!`)
             })
         }  
