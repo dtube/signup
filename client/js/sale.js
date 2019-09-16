@@ -27,7 +27,41 @@ function validStep3() {
     $("#buyOther").prop('disabled', !res)    
     return res
 }
+function loadBar(cb) {
+    var url = '/bar'
+    var options = {
+        method: 'GET',
+        timeout: 15000,
+        url: url,
+    }
+    axios(options)
+    .then((data) => {
+        var bar = data.data
+        var filled = bar.confirmed+bar.pending
+        var percent = 0.1*Math.floor((1000*filled)/(bar.max))
+        percent = percent.toFixed(1)
+        console.log('Round 1 is '+percent+'% filled')
+        $('#progressRound1').val(percent)
+        $('#filledRound1')[0].innerHTML = formatNumber(filled)
+        $('#percentRound1')[0].innerHTML = percent
+        cb()
+    })
+    .catch((error) => {
+        console.log(err.response.data)
+        toastError(err.response.data)
+        cb(err.response.data)
+    })
+}
+function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+}
 
+loadBar(function(err){
+    if (!err) {
+        $("#loader").hide()
+        $("#infoRound1").show()
+    }
+})
 country.oninput = function() {validStep1()}
 email_front.oninput = function() {validStep1()}
 fullname_front.oninput = function() {validStep1()}
