@@ -41,7 +41,7 @@ function loadBar(cb) {
         var percent = 0.1*Math.floor((1000*filled)/(bar.max))
         percent = percent.toFixed(1)
         console.log('Round 1 is '+percent+'% filled')
-        $('#progressRound1').val(percent)
+        $('#progressRound1').width(''+percent+'%')
         $('#filledRound1')[0].innerHTML = formatNumber(filled)
         $('#percentRound1')[0].innerHTML = percent
         cb()

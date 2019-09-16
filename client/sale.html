@@ -24,9 +24,10 @@
                         <div id="loader" class="loading loading-lg"></div>
                         <p id="infoRound1" style='display: none'>
                             Round One: <span id="filledRound1"></span> out of 1,000,000 DTC (<span id="percentRound1"></span>%)
-                            <progress id='progressRound1' class="progress col-4" value="25" max="100"></progress>
+                            <div class="bar">
+                                <div id='progressRound1' class="bar-item tooltip" role="progressbar" style="width:0%;"></div>
+                            </div>
                         </p>
-                        
                     </div>
                 </div>
                 <div id="progress" style='margin-top: 2rem'>
