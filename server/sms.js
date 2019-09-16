@@ -16,14 +16,18 @@ var sms = {
             Message: message,
             PhoneNumber: phoneNumber
         }, function(err, result) {
-            if (!err) {
-                cb()
-                sms.sent.push({
-                    phoneNumber: phoneNumber,
-                    ts: new Date().getTime(),
-                    ip: ip
-                })
+            if (err) {
+                console.log(err)
+                cb('Error sending SMS to '+phoneNumber)
+                return
             }
+            cb()
+            console.log('sent sms to '+phoneNumber)
+            sms.sent.push({
+                phoneNumber: phoneNumber,
+                ts: new Date().getTime(),
+                ip: ip
+            })
         })
     },
     limited: (phoneNumber, ip) => {

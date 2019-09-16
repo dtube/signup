@@ -1,6 +1,6 @@
 const config = require('./config.js')
 const fs = require('fs')
-const uuidv1 = require('uuid/v1')
+const uuidv4 = require('uuid/v4')
 const moment = require('moment')
 const express = require('express')
 const https = require('https')
@@ -138,7 +138,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                     res.status(400).send('Error verifying captcha')
                     return
                 }
-                var uuid = uuidv1()
+                var uuid = uuidv4()
                 var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
                 emails.send(req.body.email, 'DTube Signup', uuid, ip_addr, function(err, success) {
                     if (!err) {
@@ -492,7 +492,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             var charge = {
                 price: price,
                 ts: new Date().getTime(),
-                uuid: uuidv1(),
+                uuid: uuidv4(),
             }
             res.send(charge)
             charge.personal_info = req.body

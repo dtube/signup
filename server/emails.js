@@ -32,6 +32,7 @@ var emails = {
             if (err) cb(err)
             else {
                 cb(null, res)
+                console.log('sent email to '+recipient)
                 emails.sent.push({
                     recipient: recipient,
                     ts: new Date().getTime(),
