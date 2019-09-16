@@ -23,6 +23,7 @@
     "coinbase-commerce-node": "^1.0.3",
     "express": "^4.17.1",
     "express-sslify": "^1.2.0",
+    "helmet": "^3.21.0",
     "javalon": "^1.0.21",
     "moment": "^2.24.0",
     "mongodb": "^3.3.0",

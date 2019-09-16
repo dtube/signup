@@ -3,6 +3,7 @@ const fs = require('fs')
 const uuidv4 = require('uuid/v4')
 const moment = require('moment')
 const express = require('express')
+const helmet = require('helmet')
 const https = require('https')
 const http = require('http')
 const enforce = require('express-sslify')
@@ -37,11 +38,12 @@ process.on('SIGINT', function() {
 
 // express server
 const app = express()
+app.use(helmet())
 app.use(express.urlencoded())
 app.use(express.json())
 app.use(express.static('client',{ dotfiles: 'allow' }))
-app.use(fb.initialize());
-app.use(fb.session());
+app.use(fb.initialize())
+app.use(fb.session())
 app.enable('trust proxy')
 
 db = null
