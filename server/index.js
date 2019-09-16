@@ -9,13 +9,13 @@ const http = require('http')
 const enforce = require('express-sslify')
 const steem = require('steem')
 const javalon = require('javalon')
+const axios = require('axios')
 const emails = require('./emails.js')
 const captcha = require('./captcha.js')
 const sms = require('./sms.js')
 const fb = require('./facebook.js')
 const usernameValidation = require('./username_validation.js')
 const steemStreamer = require('./steemStreamer.js')
-const STEEM_DTC = 0.67
 
 var coinbase = require('coinbase-commerce-node')
 var Client = coinbase.Client
@@ -30,6 +30,9 @@ const mongoDbName = 'signup'
 const port = process.env.PORT || 3000
 const port_ssl = process.env.PORT_SSL || 443
 const debug = process.env.DEBUG || false
+
+let STEEM_USD = 0.155
+let STEEM_DTC = 0.1/(STEEM_USD)
 
 process.on('SIGINT', function() {
     if (typeof ending !== 'undefined') return
@@ -53,7 +56,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
     if (err) throw err;
     console.log("Connected successfully to database");
     db = client.db(mongoDbName);
-    steemStreamer.start(db)
+    if (config.steemStreamer)
+        steemStreamer.start(db)
     http.createServer(app).listen(port, '::1', () => {
         if (config.ssl) {
             const privateKey = fs.readFileSync('/etc/letsencrypt/live/'+config.domain+'/privkey.pem', 'utf8');
@@ -546,4 +550,26 @@ function verifToken(req, res, cb) {
             })
         }
     })
+}
+
+function updateTokenPrice() {
+    var url = "https://api.cryptonator.com/api/ticker/steem-usd"
+    axios.get(url)
+    .then(function (response) {
+        if (!response || !response.data || !response.data.ticker || !response.data.ticker.price) {
+            return
+        }
+        STEEM_USD = response.data.ticker.price
+        STEEM_DTC = 0.1/(STEEM_USD)
+        console.log('Update price: 1 DTC = '+STEEM_DTC+' STEEM')
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+}
+if (config.updateTokenPrice > 0) {
+    setInterval(function() {
+        updateTokenPrice()
+    }, config.updateTokenPrice)
+    updateTokenPrice()
 }

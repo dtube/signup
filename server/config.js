@@ -22,7 +22,9 @@ var config = {
         emailCount: 5,
         emailPeriod: 1000*60*5,
         smsCodeAttempts: 3
-    }
+    },
+    steemStreamer: false,
+    updateTokenPrice: 60000
 }
 
 module.exports = config

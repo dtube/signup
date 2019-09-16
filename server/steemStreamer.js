@@ -10,7 +10,7 @@ var streamer = {
         setInterval(() => {
             steem.api.getDynamicGlobalProperties(function(err, props) {
                 streamer.lirb = parseInt(props.last_irreversible_block_num);
-                console.log('LIRB: '+streamer.lirb)
+                //console.log('LIRB: '+streamer.lirb)
             })
         }, 3000)
 
@@ -24,7 +24,7 @@ var streamer = {
                     }
                     streamer.db.collection('last_steem_block').insertOne(block)
                 }
-                console.log(`Last loaded block was ${block.height}`);
+                //console.log(`Last loaded block was ${block.height}`);
                 const nextBlockNum = block.height + 1
                 streamer.handleBlock(nextBlockNum)
             })
