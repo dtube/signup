@@ -24,7 +24,7 @@ var config = {
         smsCodeAttempts: 3
     },
     steemStreamer: false,
-    updateTokenPrice: 60000
+    updateTokenPrice: 10*60000
 }
 
 module.exports = config

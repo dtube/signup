@@ -130,6 +130,7 @@ verifySmsCode.onclick = function() {
         console.log(data)
         $('#sms_verif2').hide()
         $('#key_generator').show()
+        hideToasts()
         progress(3)
         var key = javalon.keypair()
         $('#public').val(key.pub)
@@ -141,6 +142,30 @@ verifySmsCode.onclick = function() {
 }
 
 // keys
+
+saveKeys.onclick = function() {
+
+}
+
+copyPriv.onclick = function() {
+    var text = $('#private').val();
+    if (window.clipboardData && window.clipboardData.setData) {
+      clipboardData.setData("Text", text);
+    } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+      var textarea = document.createElement("textarea");
+      textarea.textContent = text;
+      textarea.style.position = "fixed";
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand("copy");
+      } catch (ex) {
+      } finally {
+        document.body.removeChild(textarea);
+      }
+    }
+    toastSuccess('Private Key copied to clipboard!')
+}
 
 confirmKeys.onclick = function() {
     axios({
@@ -209,8 +234,8 @@ function loader() {
 }
 
 function loadInfo(uuid) {
+    hideToasts()
     $('#loader').show()
-    $("#toastError").hide()
     var url = '/signup/'+uuid
     var options = {
         method: 'GET',
@@ -266,8 +291,22 @@ function loadInfo(uuid) {
         }
         $('#account_creation').hide()
         $('#congratulations').show()
+
         $('#presVideo').height( 9*$('#presVideo').width()/16 )
+        var ifrm = document.createElement('iframe');
+        ifrm.setAttribute('id', 'ifrm'); // assign an id
+        var el = document.getElementById('presVideo');
+        el.appendChild(ifrm);
+        
+        // assign url
+        ifrm.setAttribute('src', 'https://emb.d.tube/#!/ashtv/QmRZMemN8bZ9Pqmk5peZrqjjtgGbCiDSJU7oBZLmuL5ZgP/true');
+        ifrm.setAttribute('width', '100%')
+        ifrm.setAttribute('height', '100%')
+        ifrm.style.border = 0
+        
         $("#userDisp2")[0].innerHTML = '@'+account.username
+        $('#channelUrl')[0].innerHTML = 'https://d.tube/#!/c/'+account.username
+        // $('#goToChannel')[0].src = 'https://d.tube/#!/c/'+account.username
         progress(-1)
         return
     })

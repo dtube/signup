@@ -567,20 +567,22 @@
                 <p>
                     Welcome <span id="userDisp2"></span>, you are now a DTuber.
                     <br /><br />
-                    <iframe id="presVideo" src="https://emb.d.tube/#!/ashtv/QmRZMemN8bZ9Pqmk5peZrqjjtgGbCiDSJU7oBZLmuL5ZgP/false"
-                        width="100%"
-                        frameborder="0"
-                        scrolling="no"
-                        webkitallowfullscreen=""
-                        mozallowfullscreen=""
-                        allowfullscreen="">
-                    </iframe>
+                    <div id="presVideo"></div>
+                    <br /><br />
+                    <p>
+                        Your channel is now publicly available at <code><span id='channelUrl'></span> <i class="icon icon-link"></i></code>
+                        <br />But it's still empty! Maybe you should start publishing things?
+                    </p>
+                    <a id="goToChannel" class="btn btn-primary btn-lg" href="#">
+                        Visit my channel
+                    </a>
                 </p>
             </div>
         </center>
     </div>
     <center>
         <div id="toastError" class="toast toast-primary" style="display: none; position: fixed; top: 0px;"></div>
+        <div id="toastSuccess" class="toast toast-success" style="display: none; position: fixed; top: 0px;"></div>        
     </center>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="./js/intlTelInput-jquery.min.js"></script>
