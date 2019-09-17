@@ -443,6 +443,44 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             })
         })
 
+        // user submits a username
+        app.post('/redo/:uuid', function(req, res) {
+            if (!req.params.uuid || !req.body.field) {
+                res.status(400).send('Missing information')
+                return
+            }
+            verifToken(req, res, function(token) {
+                if (!token) return
+
+                switch (req.body.field) {
+                    case 'username':
+                        db.collection('account').updateOne({email: token.email}, {$set: {
+                            username: null
+                        }})
+                        res.send()
+                    break;
+
+                    case 'facebook':
+                        db.collection('account').updateOne({email: token.email}, {$set: {
+                            facebook: null
+                        }})
+                        res.send()
+                    break;
+
+                    case 'phone':
+                        db.collection('account').updateOne({email: token.email}, {$set: {
+                            phone: null
+                        }})
+                        res.send()
+                        break;
+                
+                    default:
+                        res.status(400).send('Missing information')
+                        break;
+                }
+            })
+        })
+
         // user finalizes his account
         // user submits a username
         app.post('/createAccount/:uuid', function(req, res) {

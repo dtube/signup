@@ -244,6 +244,23 @@ createAccount.onclick = function() {
     })
 }
 
+changeUsername.onclick = function() {
+    axios({
+        method: "POST",
+        timeout: 15000,
+        url: "/redo/"+myUuid,
+        data: {
+            field: 'username'
+        }
+    }).then(function(data) {
+        console.log(data)
+        loadInfo(myUuid)
+    }).catch(function(err, data) {
+        console.log(err)
+        loadInfo(myUuid)
+    })
+}
+
 function loader() {
     $('#loader').show()
     $('#personal_info').hide()
@@ -268,6 +285,8 @@ function loadInfo(uuid) {
         $('#facebook_verif').hide()
         $('#sms_verif').hide()
         $('#option_payment').hide()
+        $('#account_creation').hide()
+        $('#congratulations').hide()
         $("#progress").show()
         var account = data.data
         console.log(account)
@@ -343,14 +362,14 @@ function accountCreation(account) {
     var vp = 500
     var dtc = 0.1
     if (account.facebook === 'skip')
-        unverified($('#rowFacebook'))
+        unverified('facebook')
     else {
         vp += 500
         dtc += 1
     }
 
     if (account.phone === 'skip')
-        unverified($('#rowPhone'))
+        unverified('phone')
     else {
         vp += 1000
         dtc += 5
@@ -367,11 +386,28 @@ function randomPlacementCaptcha(){
     document.getElementById('captchaContainer').style.marginTop = randTop + 'px'
 }
 
-function unverified(line) {
+function unverified(name) {
+    var line = $("#row"+name)
     line[0].style.textDecoration = 'underline'
     line[0].style.cursor = 'pointer'
     line.children()[0].innerHTML = "<strong>X</strong>"
     line.removeClass('green')
+    line[0].onclick = function() {
+        axios({
+            method: "POST",
+            timeout: 15000,
+            url: "/redo/"+myUuid,
+            data: {
+                field: name
+            }
+        }).then(function(data) {
+            console.log(data)
+            loadInfo(myUuid)
+        }).catch(function(err, data) {
+            console.log(err)
+            loadInfo(myUuid)
+        })
+    }
     // line.addClass('red-dtube')
 }
 
