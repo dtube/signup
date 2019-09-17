@@ -446,7 +446,6 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // user finalizes his account
         // user submits a username
         app.post('/createAccount/:uuid', function(req, res) {
-            console.log(req.params)
             if (!req.params.uuid || typeof req.body.optin == 'undefined') {
                 res.status(400).send('Missing information')
                 return
@@ -561,7 +560,7 @@ function updateTokenPrice() {
         }
         STEEM_USD = response.data.ticker.price
         STEEM_DTC = 0.1/(STEEM_USD)
-        console.log('Update price: 1 DTC = '+STEEM_DTC+' STEEM')
+        console.log('STEEM_DTC = '+STEEM_DTC)
     })
     .catch(function (error) {
       console.log(error);

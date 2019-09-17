@@ -477,19 +477,19 @@
                         <hr>
                         <br />
                         <div class="form-group">
-                            <label class="form-switch">
+                            <label class="form-checkbox">
                                 <input type="checkbox" id="checkbox1">
                                 <i class="form-icon"></i> <i>I understand that my private key will be unrecoverable if I lose it</i>
                             </label>
                         </div>
                         <div class="form-group">
-                            <label class="form-switch">
+                            <label class="form-checkbox">
                                 <input type="checkbox" id="checkbox2">
                                 <i class="form-icon"></i> <i>I have backed up my private key safely</i>
                             </label>
                         </div>
                         <br />
-                        <button id="confirmKeys" class="btn btn-primary btn-lg" type="button">
+                        <button id="confirmKeys" class="btn btn-primary btn-lg" type="button" disabled>
                             <i class="icon icon-check"></i> Confirm
                         </button>
                     </div>
@@ -548,7 +548,7 @@
                         <h6>DTube Coin: <span class='red-dtube' id='totalDTC'></span></h6>
                         <br />
                         <div class="form-group col-9">
-                            <label class="form-switch">
+                            <label class="form-checkbox">
                                 <input type="checkbox" id="checkbox3">
                                 <i class="form-icon"></i> <i>Opt-in to receive information from DTube by digital means (email, SMS or Facebook).</i>
                             </label>
@@ -570,7 +570,7 @@
                     <div id="presVideo"></div>
                     <br /><br />
                     <p>
-                        Your channel is now publicly available at <code><span id='channelUrl'></span> <i class="icon icon-link"></i></code>
+                        Your channel is now publicly accessible on <code><span id='channelUrl'></span></code>
                         <br />But it's still empty! Maybe you should start publishing things?
                     </p>
                     <a id="goToChannel" class="btn btn-primary btn-lg" href="#">
@@ -588,6 +588,7 @@
     <script src="./js/intlTelInput-jquery.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/javalon/bin/javalon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js" integrity="sha256-u/J1Urdrk3nCYFefpoeTMgI5viU1ujCDu2fXXoSJjhg=" crossorigin="anonymous"></script>
     <script src="./js/common.js"></script>
     <script src="/js/index.js"></script>
     <script>

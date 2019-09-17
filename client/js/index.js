@@ -142,9 +142,25 @@ verifySmsCode.onclick = function() {
 }
 
 // keys
-
+checkbox1.oninput = function() {canSendKeys()}
+checkbox2.oninput = function() {canSendKeys()}
+function canSendKeys() {
+    if (checkbox1.checked && checkbox2.checked)
+        $("#confirmKeys").prop('disabled', false)
+    else
+        $("#confirmKeys").prop('disabled', true)
+}
 saveKeys.onclick = function() {
-
+    var pub = $("#public").val();
+    var priv = $("#private").val();
+    var key = JSON.stringify({
+        pub: pub,
+        priv: priv
+    })
+    var blob = new Blob([key], {type: "text/plain;charset=utf-8"})
+    alert("Do not share your private key with anyone, even DTube staff")
+    alert("Do not lose your private key or it cannot be recovered")
+    saveAs(blob, "dtube_key.txt")
 }
 
 copyPriv.onclick = function() {
@@ -168,6 +184,9 @@ copyPriv.onclick = function() {
 }
 
 confirmKeys.onclick = function() {
+    if (!$("#checkbox1")[0].checked || !$("#checkbox2")[0].checked) {
+
+    }
     axios({
         method: "POST",
         timeout: 15000,
@@ -305,8 +324,8 @@ function loadInfo(uuid) {
         ifrm.style.border = 0
         
         $("#userDisp2")[0].innerHTML = '@'+account.username
-        $('#channelUrl')[0].innerHTML = 'https://d.tube/#!/c/'+account.username
-        // $('#goToChannel')[0].src = 'https://d.tube/#!/c/'+account.username
+        $('#channelUrl')[0].innerHTML = 'https://d.tube/c/'+account.username
+        $('#goToChannel')[0].href = 'https://d.tube/#!/c/'+account.username
         progress(-1)
         return
     })
