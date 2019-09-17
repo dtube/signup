@@ -16,7 +16,7 @@ var config = {
         secret: process.env.COINBASE_SECRET || 'eee'
     },
     limits: {
-        maxTokensSold: 1000,
+        maxTokensSold: 0,
         smsCount: 2,
         smsPeriod: 1000*60*60,
         emailCount: 5,
