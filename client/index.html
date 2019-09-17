@@ -20,11 +20,11 @@
                 <div class="hero-body">
                     <img width="200" src="https://about.d.tube/img/kit/Logo_White.svg"/>
                     <div id="front" style="display:none">
-                        <h1>SIGNUP</h1>
+                        <h1>Testnet Signup</h1>
                         <p>
                             DTube is a new social media where users vote on video and get rewarded.
                             <br />
-                            Claim your free account and start earning your rewards!
+                            Create a free <span class='red-dtube'>DTube Testnet</span> account and start earning your rewards!
                             <br />
                             <h4>No bots allowed</h4>
                             We want a social media with 100% real humans.<br />
@@ -556,8 +556,11 @@
                         <br />
                         <i>By clicking the button below, you are indicating that you have read and agree to the Terms of Service and Privacy Policy</i>
                         <br /><br />
+                        <button id="chooseUsername" class="btn btn-primary btn-lg" type="button">
+                            <i class="icon icon-arrow-left"></i> Change Username
+                        </button>
                         <button id="createAccount" class="btn btn-success btn-lg" type="button">
-                            <i class="icon icon-arrow-right"></i> Create my account and claim my rewards
+                            <i class="icon icon-arrow-right"></i> Create my account
                         </button>
                     </div>
                 </form>
@@ -567,10 +570,13 @@
                 <p>
                     Welcome <span id="userDisp2"></span>, you are now a DTuber.
                     <br /><br />
-                    <div id="presVideo"></div>
+                    <span class='red-dtube'>Warning:</span> you now own a <span class='red-dtube'>testnet</span> account. This account will not be ported to the main-net automatically unless you are an airdrop recipient or a token sale investor.
+                    
+                    <br /><br />
+                    <div id="presVideo" style="width:62%"></div>
                     <br /><br />
                     <p>
-                        Your channel is now publicly accessible on <code><span id='channelUrl'></span></code>
+                        Your channel is publicly accessible on <code><span id='channelUrl'></span></code>
                         <br />But it's still empty! Maybe you should start publishing things?
                     </p>
                     <a id="goToChannel" class="btn btn-primary btn-lg" href="#">

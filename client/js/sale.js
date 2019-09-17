@@ -41,10 +41,17 @@ function loadBar(cb) {
         var percent = 0.1*Math.floor((1000*filled)/(bar.max))
         percent = percent.toFixed(1)
         console.log('Round 1 is '+percent+'% filled')
-        $('#progressRound1').width(''+percent+'%')
-        $('#filledRound1')[0].innerHTML = formatNumber(filled)
-        $('#percentRound1')[0].innerHTML = percent
-        cb()
+        if (bar.max>0 && percent<100) {
+            $('#progressRound1').width(''+percent+'%')
+            $('#filledRound1')[0].innerHTML = formatNumber(filled)
+            $('#maxRound1')[0].innerHTML = formatNumber(bar.max)
+            $('#percentRound1')[0].innerHTML = percent
+            cb()
+        }
+        else if (bar.max==0)
+            cb('Token sale is not opened yet')
+        else if (percent>=100)
+            cb('Round 1 is sold out.')
     })
     .catch((error) => {
         console.log(err.response.data)
@@ -57,8 +64,13 @@ function formatNumber(num) {
 }
 
 loadBar(function(err){
+    $("#loader").hide()
     if (!err) {
-        $("#loader").hide()
+        $("#infoRound1").show()
+        $('#step0').show()
+        $('#round1bar').show()
+    } else {
+        $("#infoRound1")[0].innerHTML = err
         $("#infoRound1").show()
     }
 })

@@ -23,11 +23,11 @@
                         <h1>TOKEN SALE</h1>
                         <div id="loader" class="loading loading-lg"></div>
                         <p id="infoRound1" style='display: none'>
-                            Round One: <span id="filledRound1"></span> out of 1,000,000 DTC (<span id="percentRound1"></span>%)
-                            <div class="bar">
-                                <div id='progressRound1' class="bar-item tooltip" role="progressbar" style="width:0%;"></div>
-                            </div>
+                            Round One: <span id="filledRound1"></span> out of <span id="maxRound1"></span> DTC (<span id="percentRound1"></span>%)
                         </p>
+                        <div id="round1bar" class="bar" style='display: none'>
+                            <div id='progressRound1' class="bar-item tooltip" role="progressbar" style="width:0%;"></div>
+                        </div>
                     </div>
                 </div>
                 <div id="progress" style='margin-top: 2rem'>
@@ -398,9 +398,6 @@
     <script src="https://unpkg.com/javalon/bin/javalon.min.js"></script>
     <script src="./js/common.js"></script>
     <script src="./js/sale.js"></script>
-    </script>
-    <script>
-        $('#step0').show()     
     </script>
 </body>
 </html>
