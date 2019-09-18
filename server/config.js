@@ -2,7 +2,8 @@ var config = {
     avalon: {
         api: process.env.AVALON_API || 'http://localhost:3001',
         priv: process.env.AVALON_PRIV || 'fff',
-        account: process.env.AVALON_USER || 'dtube'
+        account: process.env.AVALON_USER || 'dtube',
+        account_dtc: process.env.AVALON_USER_DTC || 'dtube.signup'
     },
     protocol: process.env.PROTOCOL || 'http://',
     ssl: process.env.ENABLE_SSL || false,

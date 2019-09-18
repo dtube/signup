@@ -685,10 +685,10 @@ function createAccAndFeed(username, pubKey, give_bw, give_vt, give_dtc) {
                     data: {
                         amount: give_dtc,
                         receiver: username,
-                        memo: 'Welcome to DTube chain!'
+                        memo: 'Thank you for signing up!'
                     }
                 }
-                newTx = javalon.sign(config.avalon.priv, config.avalon.account, newTx)
+                newTx = javalon.sign(config.avalon.priv, config.avalon.account_dtc, newTx)
                 javalon.sendTransaction(newTx, function(err, res) {})
             }
         }, 6000)
