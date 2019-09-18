@@ -637,6 +637,10 @@
             if (urlParams.has('fberror')) {
                 toastError('Error connecting with Facebook')
             }
+
+            if (urlParams.has('error')) {
+                toastError(urlParams.get('error'))
+            }
                 
             
             if (urlParams.has('ok'))

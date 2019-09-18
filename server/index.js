@@ -114,7 +114,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // captcha + email verification
         app.post('/contact', function (req, res) {
             if (!req.body.email || !req.body['h-captcha-response'] || !req.body.text || !req.body.subject) {
-                res.status(400).send('Missing information')
+                res.redirect('/?error=Missing Data')
                 return
             }
             captcha.check(req.body['h-captcha-response'], function(err) {
@@ -136,7 +136,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         // captcha + email verification
         app.post('/', function (req, res) {
             if (!req.body.email || !req.body['g-recaptcha-response'] || !req.body.birth) {
-                res.status(400).send('Missing information')
+                res.redirect('/?error=Missing Data')
                 return
             }
             var years = moment().diff(req.body.birth, 'years')
