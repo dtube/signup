@@ -525,7 +525,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             give_vt += 1000
                             give_dtc += 500
                         }
-                        createAccAndFeed(acc.username, acc.pub, give_bw, give_vt, give_dtc)
+                        //createAccAndFeed(acc.username, acc.pub, give_bw, give_vt, give_dtc)
                         res.send()
                     })
                 })
