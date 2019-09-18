@@ -519,11 +519,11 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                         var give_dtc = 10
                         if (acc.phone && acc.phone != 'skip') {
                             give_vt += 1000
-                            give_dtc += 100
+                            give_dtc += 500
                         }
                         if (acc.facebook && acc.facebook != 'skip') {
                             give_vt += 1000
-                            give_dtc += 500
+                            give_dtc += 100
                         }
                         createAccAndFeed(acc.username, acc.pub, give_bw, give_vt, give_dtc)
                         res.send()
