@@ -11,7 +11,8 @@ var captcha = {
             response: token,
             secret: config.hcaptchaSecret
         }
-        var url = 'https://hcaptcha.com/siteverify'
+        // var url = 'https://hcaptcha.com/siteverify'
+        var url = 'https://www.google.com/recaptcha/api/siteverify'
         var options = {
             method: 'POST',
             timeout: 2500,

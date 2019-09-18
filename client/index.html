@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="/css/spectre-icons.min.css">
     <link rel="stylesheet" href="/css/custom.css">
     <link rel="stylesheet" href="/css/intlTelInput.min.css">
-    <script src="https://hcaptcha.com/1/api.js" async defer></script>
+    <!-- <script src="https://hcaptcha.com/1/api.js" async defer></script> -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="bg-navy">
     <div class="container" style='margin-top:30px;'>
@@ -110,7 +111,8 @@
                     </div>
                     <div id='step2' class="column" style='display:none'>
                         <div id='captchaContainer'>
-                            <div class="h-captcha" data-sitekey="7816bec3-01e0-4c93-8252-dec58d7b1da9"></div> 
+                            <!-- <div class="h-captcha" data-sitekey="7816bec3-01e0-4c93-8252-dec58d7b1da9"></div> -->
+                            <div class="g-recaptcha" data-sitekey="6Le6HrkUAAAAAAw44is3vEESB8oXlO6GhEbePUcp"></div>
                         </div>
                         <button id="sendEmail" class="btn btn-light btn-lg" type="submit">
                             <i class="icon icon-mail"></i> Send email

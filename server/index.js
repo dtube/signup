@@ -135,7 +135,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         // captcha + email verification
         app.post('/', function (req, res) {
-            if (!req.body.email || !req.body['h-captcha-response'] || !req.body.birth) {
+            if (!req.body.email || !req.body['g-recaptcha-response'] || !req.body.birth) {
                 res.status(400).send('Missing information')
                 return
             }
@@ -144,7 +144,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.redirect('/?kid')
                 return
             }
-            captcha.check(req.body['h-captcha-response'], function(err) {
+            captcha.check(req.body['g-recaptcha-response'], function(err) {
                 if (err) {
                     res.status(400).send('Error verifying captcha')
                     return
