@@ -627,7 +627,7 @@ function updateTokenPrice() {
         }
         STEEM_USD = response.data.ticker.price
         STEEM_DTC = 0.1/(STEEM_USD)
-        console.log('STEEM_DTC = '+STEEM_DTC)
+        //console.log('STEEM_DTC = '+STEEM_DTC)
     })
     .catch(function (error) {
       console.log(error);
