@@ -359,12 +359,12 @@ function loadInfo(uuid) {
 function accountCreation(account) {
     $('#account_creation').show()
     progress(5)
-    var vp = 500
+    var vp = 1000
     var dtc = 0.1
     if (account.facebook === 'skip')
         unverified('facebook')
     else {
-        vp += 500
+        vp += 1000
         dtc += 1
     }
 

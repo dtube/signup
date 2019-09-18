@@ -1,4 +1,9 @@
 var config = {
+    avalon: {
+        api: process.env.AVALON_API || 'http://localhost:3001',
+        priv: process.env.AVALON_PRIV || 'fff',
+        account: process.env.AVALON_USER || 'dtube'
+    },
     protocol: process.env.PROTOCOL || 'http://',
     ssl: process.env.ENABLE_SSL || false,
     domain: process.env.DOMAIN || "http://localhost:3000",

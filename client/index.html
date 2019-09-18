@@ -554,7 +554,7 @@
                             </label>
                         </div>
                         <br />
-                        <i>By clicking the button below, you are indicating that you have read and agree to the Terms of Service and Privacy Policy</i>
+                        <i>By creating an account, you are indicating that you have read and agree to the <a href='#' onclick="openModal('terms_of_use')">Terms of Use</a> and <a href='#' onclick="openModal('privacy_policy')">Privacy Policy</a></i>
                         <br /><br />
                         <button id="changeUsername" class="btn btn-primary btn-lg" type="button">
                             <i class="icon icon-arrow-left"></i> Change Username
@@ -590,6 +590,16 @@
         <div id="toastError" class="toast toast-primary" style="display: none; position: fixed; top: 0px;"></div>
         <div id="toastSuccess" class="toast toast-success" style="display: none; position: fixed; top: 0px;"></div>        
     </center>
+    <div class="modal" id="modal-id">
+        <a onclick='$(".modal").removeClass("active")' class="modal-overlay" aria-label="Close"></a>
+        <div class="modal-container">
+            <div class="modal-body">
+                <div id="modalContent" class="content" style='height: 400px'>
+                    <!-- content here -->
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="./js/intlTelInput-jquery.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

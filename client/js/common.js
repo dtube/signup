@@ -26,3 +26,18 @@ function progress(n) {
     $('#progress>ul>li').removeClass('active')
     $('#progress>ul>li')[n].classList.add('active')
 }
+
+function openModal(type) {
+    $("#modalContent")[0].innerHTML = ''
+    $('.modal').addClass('active')
+    var ifrm = document.createElement('iframe');
+    ifrm.setAttribute('id', 'legalDoc'); // assign an id
+    var el = document.getElementById('modalContent');
+    el.appendChild(ifrm);
+    
+    // assign url
+    ifrm.setAttribute('src', 'https://about.d.tube/legal/'+type+'.html');
+    ifrm.setAttribute('width', '100%')
+    ifrm.setAttribute('height', '100%')
+    ifrm.style.border = 0
+}

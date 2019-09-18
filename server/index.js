@@ -17,6 +17,8 @@ const fb = require('./facebook.js')
 const usernameValidation = require('./username_validation.js')
 const steemStreamer = require('./steemStreamer.js')
 
+javalon.init({api: config.avalon.api})
+
 var coinbase = require('coinbase-commerce-node')
 var Client = coinbase.Client
 Client.init(config.coinbase.apiKey)
@@ -497,15 +499,36 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             verifToken(req, res, function(token) {
                 if (!token) return
 
-                db.collection('account').updateOne({
+                db.collection('account').findOne({
                     email: token.email
-                }, {
-                    $set: {
-                        optin: req.body.optin,
-                        finalized: true
+                }, function(err, acc) {
+                    if (!acc || acc.finalized) {
+                        res.status(400).send('Can only create account once')
+                        return
                     }
+                    db.collection('account').updateOne({
+                        email: token.email
+                    }, {
+                        $set: {
+                            optin: req.body.optin,
+                            finalized: true
+                        }
+                    }, function() {
+                        var give_bw = 50000
+                        var give_vt = 1000
+                        var give_dtc = 10
+                        if (acc.phone && acc.phone != 'skip') {
+                            give_vt += 1000
+                            give_dtc += 100
+                        }
+                        if (acc.facebook && acc.facebook != 'skip') {
+                            give_vt += 1000
+                            give_dtc += 500
+                        }
+                        createAccAndFeed(acc.username, acc.pub, give_bw, give_vt, give_dtc)
+                        res.send()
+                    })
                 })
-                res.send()
             })
         })
 
@@ -615,4 +638,59 @@ if (config.updateTokenPrice > 0) {
         updateTokenPrice()
     }, config.updateTokenPrice)
     updateTokenPrice()
+}
+
+function createAccAndFeed(username, pubKey, give_bw, give_vt, give_dtc) {
+    console.log('Creating '+username+' '+pubKey)
+    var txData = {
+        pub: pubKey,
+        name: username
+    }
+    var newTx = {
+        type: 0,
+        data: txData
+    }
+    newTx = javalon.sign(config.avalon.priv, config.avalon.account, newTx)
+    javalon.sendTransaction(newTx, function(err, res) {
+        if (err) return
+        console.log('Feeding '+username)
+        setTimeout(function() {
+            if (give_vt) {
+                var newTx = {
+                    type: 14,
+                    data: {
+                        amount: give_vt,
+                        receiver: username
+                    }
+                }
+                newTx = javalon.sign(config.avalon.priv, config.avalon.account, newTx)
+                javalon.sendTransaction(newTx, function(err, res) {})
+            }
+
+            if (give_bw) {
+                var newTx = {
+                    type: 15,
+                    data: {
+                        amount: give_bw,
+                        receiver: username
+                    }
+                }
+                newTx = javalon.sign(config.avalon.priv, config.avalon.account, newTx)
+                javalon.sendTransaction(newTx, function(err, res) {})
+            }
+            
+            if (give_dtc) {
+                var newTx = {
+                    type: 3,
+                    data: {
+                        amount: give_dtc,
+                        receiver: username,
+                        memo: 'Welcome to DTube chain!'
+                    }
+                }
+                newTx = javalon.sign(config.avalon.priv, config.avalon.account, newTx)
+                javalon.sendTransaction(newTx, function(err, res) {})
+            }
+        }, 6000)
+    })
 }
