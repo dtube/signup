@@ -18,12 +18,12 @@ var emails = {
             return
         }
         var link = config.protocol+config.domain+'/?uuid='+uuid
-        var text = "Claim your dtube account now\nclick on the following link:\n"
+        var text = "To continue the account creation process, please click on the following link:\n"
         var htmlText = text.replace('\n','<br/>')
         text += link
         htmlText += '<a href="'+link+'">'+link+'</a>'
         transporter.sendMail({
-            from: '"DTube ▶️ Authentication Link" <test@d.tube>',
+            from: '"DTube Signup" <noreply@d.tube>',
             to: recipient,
             subject: subject,
             text: text,
