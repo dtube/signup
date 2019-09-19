@@ -1,5 +1,5 @@
 const steem = require('steem')
-const start_block = 36480000
+const start_block = 36558234
 
 var streamer = {
     db: null,
@@ -60,6 +60,44 @@ var streamer = {
         }
     },
     work: function(block, cb) {
+        let txs = block.transactions
+        for (let i = 0; i < txs.length; i++) {
+            let tx = txs[i];
+            for (let y = 0; y < tx.operations.length; y++) {
+                let op = tx.operations[y];
+                if (op[0] === 'transfer'
+                    && op[1].to === 'dtube'
+                    && op[1].memo
+                ) {
+                    console.log('Received '+op[1].amount+' from '+op[1].from+' '+op[1].memo)
+                    streamer.db.collection('charges').findOne({
+                        id: op[1].memo
+                    }, function(err, charge) {
+                        if (!charge) {
+                            console.log("Error finding matching payment!!")
+                            return
+                        }
+                        var paid = op[1].amount.split(' ')
+                        paid[0] = parseFloat(paid[0])
+                        if (paid[1] !== 'STEEM') {
+                            console.log("Error received wrong currency "+paid[1])
+                            return
+                        }
+                        if (paid[0] < parseFloat(charge.price)) {
+                            console.log("Error payment too little")
+                            return
+                        }
+                        console.log("Confirmed STEEM charge "+op[1].memo)
+                        streamer.db.collection('charges').updateOne({
+                            id: op[1].memo
+                        }, {$set: {
+                            status: 'charge:confirmed',
+                            steemTx: tx
+                        }})
+                    })
+                }
+            }
+        }
         cb()
     }
 }

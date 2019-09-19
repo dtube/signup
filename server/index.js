@@ -565,9 +565,9 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             price = price.toFixed(3)
             console.log('New Steem Charge '+req.body.amount+' DTC ')
             var charge = {
+                id: uuidv4(),
                 price: price,
-                ts: new Date().getTime(),
-                uuid: uuidv4(),
+                ts: new Date().getTime()
             }
             res.send(charge)
             charge.personal_info = req.body

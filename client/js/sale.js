@@ -150,7 +150,7 @@ buySteem.onclick = function() {
         var charge = data.data
         console.log(charge)
         $('#amountSteem')[0].innerHTML = charge.price
-        $('#memoSteem')[0].innerHTML = charge.uuid
+        $('#memoSteem')[0].innerHTML = charge.id
 
         if (typeof steem_keychain != 'undefined') {
             $('#buyKeychain').prop('disabled', false)
