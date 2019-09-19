@@ -268,7 +268,7 @@ closeModal.onclick = function() {
 buySteemconnect.onclick = function() {
     var url = "https://steemconnect.com/sign/transfer?to=dtube&amount="
     +$('#amountSteem')[0].innerHTML
-    +"&memo="
+    +" STEEM&memo="
     +$('#memoSteem')[0].innerHTML
     window.open(url);
 }
