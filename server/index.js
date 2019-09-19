@@ -111,6 +111,18 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             })
         })
 
+        // notice next round
+        app.post('/alertNextRound', function (req, res) {
+            if (!req.body.email || !emails.validate(req.body.email)) {
+                res.send({ok: false})
+                return
+            }
+            db.collection('next_round_alert').insertOne({
+                email: req.body.email
+            })
+            res.send({ok: 1})
+        })
+
         // captcha + email verification
         app.post('/contact', function (req, res) {
             if (!req.body.email || !req.body['h-captcha-response'] || !req.body.text || !req.body.subject) {

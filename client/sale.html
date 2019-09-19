@@ -28,9 +28,24 @@
                         <div id="round1bar" class="bar" style='display: none'>
                             <div id='progressRound1' class="bar-item tooltip" role="progressbar" style="width:0%;"></div>
                         </div>
+                        <div id='notopen' style='display: none'>
+                            Round 1 is not open yet. Please wait.
+                        </div>
+                        <div id='soldout' style='display: none'>
+                            <strong>Round 1 is sold out</strong>: 1,000,000 DTC have been sold.
+                            <br /><br />
+                            Don't want to miss the next round?
+                            <br />We can alert your 24h before the next token sale event.
+                            <br /><br />
+                            <div class="form-group">
+                                <label class="form-label" for="input-example-1"><strong>Email</strong></label>
+                                <input class="form-input" type="email" id="alertEmail"/>
+                            </div>
+                            <button id="alertNextRound" type="button" class="btn btn-primary">Alert me</button>
+                        </div>
                     </div>
                 </div>
-                <div id="progress" style='margin-top: 2rem'>
+                <div id="progress" style='margin-top: 2rem; display: none'>
                     <ul class="step">
                         <li class="step-item active">
                             <a href="#" class="tooltip" data-tooltip="Login to verify your keys">Login</a>
@@ -424,6 +439,7 @@
     </div>
     <center>
         <div id="toastError" class="toast toast-primary" style="display: none; position: fixed; top: 0px;"></div>
+        <div id="toastSuccess" class="toast toast-success" style="display: none; position: fixed; top: 0px;"></div>                
     </center>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="./js/intlTelInput-jquery.min.js"></script>

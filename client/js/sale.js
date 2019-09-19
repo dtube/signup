@@ -48,10 +48,15 @@ function loadBar(cb) {
             $('#percentRound1')[0].innerHTML = percent
             cb()
         }
-        else if (bar.max==0)
+        else if (bar.max==0) {
             cb('Token sale is not opened yet')
-        else if (percent>=100)
+            $("#notopen").show()
+        }
+        else if (percent>=100) {
             cb('Round 1 is sold out.')
+            $("#soldout").show()
+        }
+            
     })
     .catch((error) => {
         console.log(err.response.data)
@@ -70,8 +75,11 @@ loadBar(function(err){
         $('#step0').show()
         $('#round1bar').show()
     } else {
-        $("#infoRound1")[0].innerHTML = err
-        $("#infoRound1").show()
+        $("#infoRound1").hide()
+        $("#progress").hide()
+        $("#round1bar").hide()
+        $("#soldout").hide()
+        $("#notopen").hide()
     }
 })
 setInterval(function() {
@@ -80,8 +88,11 @@ setInterval(function() {
             $("#infoRound1").show()
             $('#round1bar').show()
         } else {
-            $("#infoRound1")[0].innerHTML = err
-            $('#round1bar').show()
+            $("#infoRound1").hide()
+            $("#progress").hide()
+            $("#round1bar").hide()
+            $("#soldout").hide()
+            $("#notopen").hide()
         }
     })
 }, 10000)
@@ -284,3 +295,22 @@ buyKeychain.onclick = function() {
     }, false);
 }
 
+alertNextRound.onclick = function() {
+    axios({
+        method: "POST",
+        timeout: 15000,
+        url: "/alertNextRound/",
+        data: {
+            email: $("#alertEmail").val()
+        }
+    }).then(function(data) {
+        if (data.data.ok) {
+            toastSuccess('Email added! Thank you for your interest.')
+        } else {
+            toastError('Error... Wrong email?')
+        }
+    }).catch(function(err, data) {
+        console.log(err.response.data)
+        toastError(err.response.data)
+    })
+}

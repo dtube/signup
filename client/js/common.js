@@ -1,11 +1,13 @@
 function toastError(message) {
     $("#toastError")[0].innerHTML = message
     $("#toastError").show()
+    $("#toastSuccess").hide()
 }
 
 function toastSuccess(message) {
     $("#toastSuccess")[0].innerHTML = message
     $("#toastSuccess").show()
+    $("#toastError").hide()
 }
 
 function hideToasts() {
