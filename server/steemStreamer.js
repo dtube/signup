@@ -35,8 +35,7 @@ var streamer = {
         if (streamer.lirb >= blockNum) {
             steem.api.getBlock(blockNum, function(err, block) {
                 if (err) {
-                    if (blockNum%100 == 0)
-                        console.error(`Request 'getBlock' failed at block num: ${blockNum}, retry`, err);
+                    console.error(`Request 'getBlock' failed at block num: ${blockNum}, retry`, err);
                     streamer.handleBlock(blockNum);
                     return
                 }
@@ -50,7 +49,8 @@ var streamer = {
                             streamer.handleBlock(blockNum);
                             return
                         }
-                        console.log(`New block height is ${blockNum} ${block.timestamp}`);
+                        if (blockNum%100 == 0)
+                            console.log(`New block height is ${blockNum} ${block.timestamp}`);
                         streamer.handleBlock(blockNum + 1)
                     })
                 })
