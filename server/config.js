@@ -22,14 +22,15 @@ var config = {
         secret: process.env.COINBASE_SECRET || 'eee'
     },
     limits: {
-        maxTokensSold: 0,
+        maxTokensSold: 1000000,
         smsCount: 2,
         smsPeriod: 1000*60*60,
         emailCount: 5,
         emailPeriod: 1000*60*5,
         smsCodeAttempts: 3
     },
-    steemStreamer: false,
+    steemStreamer: true,
+    steemStartBlock: 36563600,
     updateTokenPrice: 10*60000
 }
 

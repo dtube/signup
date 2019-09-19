@@ -1,5 +1,6 @@
 const steem = require('steem')
-const start_block = 36558234
+const config = require('./config.js')
+const start_block = config.steemStartBlock
 
 var streamer = {
     db: null,

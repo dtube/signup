@@ -36,11 +36,11 @@ function loadBar(cb) {
     }
     axios(options)
     .then((data) => {
-        var bar = data.data
+        bar = data.data
         var filled = bar.confirmed+bar.pending
         var percent = 0.1*Math.floor((1000*filled)/(bar.max))
         percent = percent.toFixed(1)
-        console.log('Round 1 is '+percent+'% filled')
+        //console.log('Round 1 is '+percent+'% filled')
         if (bar.max>0 && percent<100) {
             $('#progressRound1').width(''+percent+'%')
             $('#filledRound1')[0].innerHTML = formatNumber(filled)
@@ -74,6 +74,17 @@ loadBar(function(err){
         $("#infoRound1").show()
     }
 })
+setInterval(function() {
+    loadBar(function(err) {
+        if (!err) {
+            $("#infoRound1").show()
+            $('#round1bar').show()
+        } else {
+            $("#infoRound1")[0].innerHTML = err
+            $('#round1bar').show()
+        }
+    })
+}, 10000)
 country.oninput = function() {validStep1()}
 email_front.oninput = function() {validStep1()}
 fullname_front.oninput = function() {validStep1()}
@@ -107,6 +118,29 @@ btnStep0.onclick = function() {
 
 btnStep1.onclick = function() {
     $("#step1").hide()
+
+    var real_max = 150000
+    europe = ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark",
+    "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia",
+    "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia",
+    "Slovenia", "Spain", "Sweden", "United Kingdom"]
+
+    if (europe.indexOf($("#country").val()) > -1) {
+        real_max = 30000
+    }
+
+    if (bar.max < real_max)
+        real_max = bar.max
+
+    $("#dtcnumber")[0].max = real_max
+    $("#dtcslider")[0].max = real_max
+
+    if ($("#dtcnumber")[0].value > real_max)
+        $("#dtcnumber")[0].value = real_max
+
+    if ($("#dtcslider")[0].value > real_max)
+        $("#dtcslider")[0].value = real_max
+
     $("#step2").show()
     progress(2)
     $("#usernameDisp")[0].innerHTML = $("#username").val()
@@ -152,11 +186,51 @@ buySteem.onclick = function() {
         $('#amountSteem')[0].innerHTML = charge.price
         $('#memoSteem')[0].innerHTML = charge.id
 
+        steemPayFinish = new Date().getTime() + 15*60*1000
+        var countdownSteem = setInterval(function() {
+            var timeLeft = steemPayFinish - new Date().getTime()
+            if (timeLeft < 1) {
+                $("#timePaySteem")[0].innerHTML = "Payment failed to verify in time."
+                return
+            }
+            var secs = Math.floor(timeLeft/1000)
+            var mins = Math.floor(secs/60)
+            secs = secs - 60*mins
+
+            if (secs.length == 1) secs = '0'+secs
+            if (mins.length == 1) mins = '0'+mins
+            
+            $("#timePaySteem")[0].innerHTML = mins+':'+secs
+        }, 1000)
+        var paymentCheckSteem = setInterval(function() {
+            var url = '/isPaidSteem/'+charge.id
+            var options = {
+                method: 'GET',
+                timeout: 15000,
+                url: url,
+            }
+            axios(options)
+            .then((data) => {
+                console.log(data.data)
+                if (data.data && data.data.paid) {
+                    $("#steemModalContainer")[0].innerHTML = '<div class="modal-body" style="color:black; text-align: center"><h1><i class="icon icon-check"></i> Payment Validated!</h1><p>Please check your emails</p></div>'
+                    clearTimeout(countdownSteem)
+                    clearTimeout(paymentCheckSteem)
+                }
+            })
+            .catch((err) => {
+                console.log(err.response.data)
+                toastError(err.response.data)
+                cb(err.response.data)
+            })
+        }, 6000)
+        $('#memoSteem')[0].innerHTML = charge.id
+
         if (typeof steem_keychain != 'undefined') {
             $('#buyKeychain').prop('disabled', false)
         }
 
-        $('.modal').addClass('active')
+        $('.modalPaySteem').addClass('active')
     }).catch(function(err, data) {
         console.log(err.response.data)
         toastError(err.response.data)
@@ -192,10 +266,11 @@ closeModal.onclick = function() {
 }
 
 buySteemconnect.onclick = function() {
-    window.location.href = "https://steemconnect.com/sign/transfer?to=dtube&amount="
+    var url = "https://steemconnect.com/sign/transfer?to=dtube&amount="
     +$('#amountSteem')[0].innerHTML
     +"&memo="
     +$('#memoSteem')[0].innerHTML
+    window.open(url);
 }
 
 buyKeychain.onclick = function() {

@@ -536,6 +536,19 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         app.post('/buyOther/', function(req, res) {
             var price = 0.10*parseInt(req.body.amount)
             price = price.toFixed(2)
+
+            europe = ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark",
+            "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia",
+            "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia",
+            "Slovenia", "Spain", "Sweden", "United Kingdom"]
+            if (price > 15000) {
+                res.status(503).send('Max amount is $15,000')
+                return
+            }
+            if (europe.indexOf(req.body.country) > -1 && price > 3000) {
+                res.status(503).send('Max amount is $3,000 for EU residents')
+                return
+            }
             var chargeData = {
                 'name': 'DTC Round 1',
                 'description': req.body.amount+' DTC to @'+req.body.username,
@@ -572,6 +585,23 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             res.send(charge)
             charge.personal_info = req.body
             db.collection('charges').insertOne(charge)
+        })
+
+        app.get('/isPaidSteem/:orderid', function(req, res) {
+            if (!req.params.orderid) {
+                res.status(400).send('Missing order id')
+                return
+            }
+            db.collection('charges').findOne({
+                id: req.params.orderid,
+                status: 'charge:confirmed'
+            }, function(err, charge) {
+                if (!charge) {
+                    res.send({paid: false})
+                } else {
+                    res.send({paid: true})
+                }
+            })
         })
 
         // coinbase verify payments
