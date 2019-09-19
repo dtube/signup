@@ -35,7 +35,8 @@ var streamer = {
         if (streamer.lirb >= blockNum) {
             steem.api.getBlock(blockNum, function(err, block) {
                 if (err) {
-                    console.error(`Request 'getBlock' failed at block num: ${blockNum}, retry`, err);
+                    if (blockNum%100 == 0)
+                        console.error(`Request 'getBlock' failed at block num: ${blockNum}, retry`, err);
                     streamer.handleBlock(blockNum);
                     return
                 }
