@@ -574,6 +574,21 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         // token sale steem
         app.post('/buySteem/', function(req, res) {
+            var price_usd = 0.10*parseInt(req.body.amount)
+            price_usd = price_usd.toFixed(2)
+            europe = ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark",
+            "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia",
+            "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia",
+            "Slovenia", "Spain", "Sweden", "United Kingdom"]
+            if (price_usd > 15000) {
+                res.status(503).send('Max amount is $15,000')
+                return
+            }
+            if (europe.indexOf(req.body.country) > -1 && price_usd > 3000) {
+                res.status(503).send('Max amount is $3,000 for EU residents')
+                return
+            }
+
             var price = STEEM_DTC*parseInt(req.body.amount)
             price = price.toFixed(3)
             console.log('New Steem Charge '+req.body.amount+' DTC ')
