@@ -534,6 +534,10 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         // token sale coinbase
         app.post('/buyOther/', function(req, res) {
+            if (!req.body.amount || parseInt(req.body.amount)%1 !== 0) {
+                res.status(400).send('DTC amount must be an integer')
+                return
+            }
             var price = 0.10*parseInt(req.body.amount)
             price = price.toFixed(2)
 
@@ -542,11 +546,11 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia",
             "Slovenia", "Spain", "Sweden", "United Kingdom"]
             if (price > 15000) {
-                res.status(503).send('Max amount is $15,000')
+                res.status(400).send('Max amount is $15,000')
                 return
             }
             if (europe.indexOf(req.body.country) > -1 && price > 3000) {
-                res.status(503).send('Max amount is $3,000 for EU residents')
+                res.status(400).send('Max amount is $3,000 for EU residents')
                 return
             }
             var chargeData = {
@@ -574,6 +578,11 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         // token sale steem
         app.post('/buySteem/', function(req, res) {
+            if (!req.body.amount || parseInt(req.body.amount)%1 !== 0) {
+                res.status(400).send('DTC amount must be an integer')
+                return
+            }
+
             var price_usd = 0.10*parseInt(req.body.amount)
             price_usd = price_usd.toFixed(2)
             europe = ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark",
