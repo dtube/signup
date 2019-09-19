@@ -122,11 +122,14 @@ btnStep1.onclick = function() {
     var real_max = 150000
     europe = ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark",
     "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia",
+    "French Guiana", "French Polynesia", "French Southern Territories",
+    "Guadeloupe", "Martinique", "Mayotte", "Reunion",
     "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia",
     "Slovenia", "Spain", "Sweden", "United Kingdom"]
 
     if (europe.indexOf($("#country").val()) > -1) {
         real_max = 30000
+        $('.isEurope').show()
     }
 
     if (bar.max < real_max)

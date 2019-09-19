@@ -49,8 +49,8 @@
             <form id='form' class='form-vertical col-4 col-mx-auto' action='' method='POST'>
                 <div id='step0' class="column" style='display: none;'>
                     <p>
-                        Login with your testnet account to confirm you succesfully own valid private keys.
-                        <br /><br />DO NOT LOSE those keys if you want to be able to use your DTCs. DTube does not hold your keys and would not be able to help you.
+                        You need a testnet account to participate in the Round 1.
+                        <br />Login or Sign-up now.
                     </p>
                     <div class="form-group">
                         <label class="form-label" for="fullname">Username</label>
@@ -61,16 +61,19 @@
                         <input class="form-input" type="password" id="priv" name="priv">
                     </div>
                     <br />
+                    <a href="https://signup.d.tube" id="btnSignup" class="btn btn-error btn-lg" type="button" target="_blank">
+                        <i class="icon icon-people"></i> Sign-up
+                    </a>
                     <button id="btnStep0" class="btn btn-primary btn-lg" type="button">
                         <i class="icon icon-arrow-right"></i> Login
                     </button>
                 </div>
                 <div id='step1' class="column" style='display: none'>
                     <p>
-                        Please make sure to properly fill this information. It would be needed in case of issue requiring a refund.
+                        Please make sure to properly fill this information. We need to able to contact you in case of a refund.
                     </p>
                     <div class="form-group">
-                        <label class="form-label" for="country">Country of residence</label>
+                        <label class="form-label" for="country">Country of residence *</label>
                         <select class="form-select" id="country" name="country" style="color: black"> 
                             <option value="" selected="selected">Select Country</option> 
                             <option value="United States">United States</option> 
@@ -317,21 +320,21 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="email">Contact Email</label>
+                        <label class="form-label" for="email">Contact Email *</label>
                         <input class="form-input" type="email" id="email_front" name="email">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="fullname">Full Name</label>
+                        <label class="form-label" for="fullname">Full Name *</label>
                         <input class="form-input" type="text" id="fullname_front" name="fullname">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="fulladdress">Full Postal Address</label>
+                        <label class="form-label" for="fulladdress">Postal Address *</label>
                         <textarea class="form-input" id="fulladdress" rows="4"></textarea>
                     </div>
                     <div class="form-group form-inline">
                         <label class="form-checkbox">
                             <input type="checkbox" id="agreePrivacy">
-                            <i class="form-icon"></i> I have read and agree to the <a href="#">Privacy Policy</a>
+                            <i class="form-icon"></i> I have read and agree to the <a href="#" onclick="openModal('privacy_policy')">Privacy Policy</a>
                         </label>
                     </div>
                     <br />
@@ -350,19 +353,31 @@
                         </label>
                     </div>
                     <br /><br />
-                    <h3>Price: <span id="priceDisp">$5</span></h3>
-                    <p>You will receive the @<span id="usernameDisp"></span> account on DTube mainnet and <span id="dtcDisp"></span> DTC directly inside the account.</p>
-                    <p>This utility token will be yours and owned by your private key, but will only be transferable and usable once the 25M DTC fundraising completes and our main-net launches, likely within the end of the year.</p>
+                    <h3>Final Price: <span id="priceDisp">$5</span></h3>
+                    <p>
+                        <i class='isEurope' style='display:none'>(including VAT 20%)</i>
+                    </p>
+                    <p>You will receive the <strong>@<span id="usernameDisp"></span> account on DTube main-net and <span id="dtcDisp"></span> DTC</strong> directly inside the account.</p>
+                    <p>This utility token will be yours and owned by your private key. DTC services will be available on the d.tube platform in Q4, 2019 and will be announced on DTube social medias.</p>
+                    <p>
+                        <i>
+                            DTC is not an investment offer or an investment contract, it is not designed to offer profits or voting rights to its holder.
+                        </i>
+                    </p>
                     <div class="form-group form-inline">
                         <label class="form-checkbox">
                             <input type="checkbox" id="agreeSale">
-                            <i class="form-icon"></i> I have read and agree to the <a href="#" onclick="openModal('terms_of_sale')">Terms of Sale</a>
+                            <i class="form-icon"></i> I have read and agree to the <a href="#" onclick="openModal('terms_of_sale')">Terms of Sale</a> and <a href="#" onclick="openModal('terms_of_use')">Terms of Use</a>
                         </label>
                     </div>
-                    <br />
+                    <br /><br />
                     <button id="buySteem" class="btn btn-primary btn-lg" type="button" disabled>Buy with STEEM</button>  
                     <div class="divider text-center"></div>
                     <button id="buyOther" class="btn btn-primary btn-lg" type="button" disabled>Buy with BTC and more alts</button>
+                    <br /><br /><br />
+                    <p style='font-size:10px'>
+                        DTC is provided by DCorp France SAS software company. Need help? contact <a href="https://discord.gg/dtube">support</a>
+                    </p>
                 </div>
             </form>
         </div>
@@ -371,7 +386,6 @@
         <a href="#close" class="modal-overlay" aria-label="Close"></a>
         <div class="modal-container" id='steemModalContainer'>
             <div class="modal-header">
-                <a class="btn btn-clear float-right" id='closeModal' href="#modals-sizes" aria-label="Close"></a>
                 <div class="modal-title h5">Pay with STEEM</div>
             </div>
             <div class="modal-body">
@@ -382,12 +396,19 @@
                         <br />Memo: <code><span id='memoSteem'>qweqwe</span></code>
                         <br />
                         <i class="icon icon-time"></i> <span id='timePaySteem'>15:00</span>
+                        <p>
+                            <i>Please wait after validating your payment. Processing can take up to two minutes.</i>
+                        </p>
                     </p>
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="buyKeychain" class="btn btn-primary" type="button" disabled>KeyChain</button>
-                <button id="buySteemconnect" class="btn btn-primary" type="button">SteemConnect</button>
+                <div class='row'>
+                    <button id="closeModal" class="btn btn-error" type="button">Cancel Order</button>                                                
+                    <button id="buyKeychain" class="btn btn-primary" type="button" disabled>Pay with KeyChain</button>
+                    <button id="buySteemconnect" class="btn btn-primary" type="button">Pay with SteemConnect</button>
+                </div>
+
             </div>
         </div>
     </div>

@@ -15,3 +15,14 @@
 .green {
     color: #32b643;
 }
+
+.modal.active .modal-overlay, .modal:target .modal-overlay {
+    background: rgba(247,248,249,0.50);
+    bottom: 0;
+    cursor: default;
+    display: block;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}

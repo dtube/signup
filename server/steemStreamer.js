@@ -1,4 +1,5 @@
 const steem = require('steem')
+const emails = require('./emails.js')
 const config = require('./config.js')
 const start_block = config.steemStartBlock
 
@@ -96,6 +97,9 @@ var streamer = {
                             status: 'charge:confirmed',
                             steemTx: tx
                         }})
+                        emails.sendOrderComplete(charge, function(err) {
+                            if (err) console.log(err)
+                        })
                     })
                 }
             }

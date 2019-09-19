@@ -41,6 +41,25 @@ var emails = {
             }
         });
     },
+    sendOrderComplete: (order, cb) => {
+        var text = "Dear "+order.personal_info.username+",\n\nOn behalf of DTube and the DWeb, thank you!\n\nWe have just registered your contribution for $"+order.price
+        +".\nYour order has been validated. We will recontact you after the Round one is complete. At this point we will launch the main-net and create your final DTube account, which will contain your "
+        +order.personal_info.amount+" DTC\n\n\nBest regards,\n\nThe DTube team"
+        var htmlText = text.replace('\n','<br/>')
+        transporter.sendMail({
+            from: '"DTube" <contact@d.tube>',
+            to: order.personal_info.email,
+            subject: "Your DTC Round #1 order is validated",
+            text: text,
+            html: htmlText
+        }, function(err, res) {
+            if (err) cb(err)
+            else {
+                cb(null, res)
+                console.log('sent order conf email to '+order.personal_info.email)
+            }
+        });
+    },
     sendContact: (recipient, subject, text, ip, cb) => {
         if (recipient.split('@')[1] !== 'd.tube')  {
             cb('A contact email requires a @d.tube recipient.')

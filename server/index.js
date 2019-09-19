@@ -543,6 +543,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
             europe = ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark",
             "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia",
+            "French Guiana", "French Polynesia", "French Southern Territories",
+            "Guadeloupe", "Martinique", "Mayotte", "Reunion",
             "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia",
             "Slovenia", "Spain", "Sweden", "United Kingdom"]
             if (price > 15000) {
@@ -587,6 +589,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             price_usd = price_usd.toFixed(2)
             europe = ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark",
             "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia",
+            "French Guiana", "French Polynesia", "French Southern Territories",
+            "Guadeloupe", "Martinique", "Mayotte", "Reunion",
             "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia",
             "Slovenia", "Spain", "Sweden", "United Kingdom"]
             if (price_usd > 15000) {
@@ -650,6 +654,11 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 "status": status,
                 "timeline": event.data.timeline
             }})
+            db.collection('charges').findOne({id: event.data.id}, function(err, charge) {
+                emails.sendOrderComplete(charge, function(err) {
+                    if (err) console.log(err)
+                })
+            })
         })
     })
 })
