@@ -550,6 +550,10 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.status(400).send('DTC amount must be an integer')
                 return
             }
+            if (!emails.validate(req.body.email)) {
+                res.status(400).send('Invalid email')
+                return
+            }
             var price = 0.10*parseInt(req.body.amount)
             price = price.toFixed(2)
 
@@ -594,6 +598,10 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         app.post('/buySteem/', function(req, res) {
             if (!req.body.amount || parseInt(req.body.amount)%1 !== 0) {
                 res.status(400).send('DTC amount must be an integer')
+                return
+            }
+            if (!emails.validate(req.body.email)) {
+                res.status(400).send('Invalid email')
                 return
             }
 

@@ -128,6 +128,11 @@ btnStep0.onclick = function() {
 }
 
 btnStep1.onclick = function() {
+    hideToasts()
+    if (!validateEmail($("#email_front").val())) {
+        toastError("Please enter a valid email")
+        return
+    }
     $("#step1").hide()
 
     var real_max = 150000
