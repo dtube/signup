@@ -675,7 +675,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 "timeline": event.data.timeline
             }})
             db.collection('charges').findOne({id: event.data.id}, function(err, charge) {
-                if (stats === 'charge:confirmed')
+                if (status === 'charge:confirmed')
                     emails.sendOrderComplete(charge, function(err) {
                         if (err) console.log(err)
                     })
