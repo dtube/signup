@@ -56,7 +56,7 @@ var emails = {
         var text = "Dear "+order.personal_info.username+",\n\nOn behalf of DTube and the DWeb, thank you!\n\nWe have just registered your contribution for "+price
         +".\nYour order has been validated. We will recontact you after the Round #1 is complete. At this point we will launch the main-net and create your final DTube account, which will contain your "
         +order.personal_info.amount+" DTC\n\n\nBest regards,\n\nThe DTube team"
-        var htmlText = text.replace('\n','<br/>')
+        var htmlText = text.replace(/(\r\n|\n|\r)/gm,"<br />");
         transporter.sendMail({
             from: '"DTube" <contact@d.tube>',
             to: order.personal_info.email,
