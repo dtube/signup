@@ -148,8 +148,8 @@ btnStep1.onclick = function() {
         $('.isEurope').show()
     }
 
-    if (bar.max < real_max)
-        real_max = bar.max
+    if ((bar.max-bar.pending-bar.confirmed) < real_max)
+        real_max = (bar.max-bar.pending-bar.confirmed)
 
     $("#dtcnumber")[0].max = real_max
     $("#dtcslider")[0].max = real_max
