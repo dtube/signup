@@ -116,10 +116,10 @@ btnStep0.onclick = function() {
             return
         }
         var account = accounts[0]
-        // if (javalon.privToPub(inputKey) !== account.pub) {
-        //     toastError("Private key does not match for account @"+inputUsername)
-        //     return
-        // }
+        if (javalon.privToPub(inputKey) !== account.pub) {
+            toastError("Private key does not match for account @"+inputUsername)
+            return
+        }
         $("#step0").hide()
         $("#step1").show()
         $('#toastError').hide()
@@ -191,8 +191,8 @@ buySteem.onclick = function() {
         url: "/buySteem/",
         data: {
             username: $('#username').val(),
-            // pub: javalon.privToPub($('#priv').val()),
-            pub: 'uNc0MM3nTm3',
+            pub: javalon.privToPub($('#priv').val()),
+            // pub: 'uNc0MM3nTm3',
             country: $('#country').val(),
             email: $('#email_front').val(),
             fullname: $('#fullname_front').val(),
@@ -263,8 +263,8 @@ buyOther.onclick = function() {
         url: "/buyOther/",
         data: {
             username: $('#username').val(),
-            // pub: javalon.privToPub($('#priv').val()),
-            pub: 'uNc0MM3nTm3',
+            pub: javalon.privToPub($('#priv').val()),
+            // pub: 'uNc0MM3nTm3',
             country: $('#country').val(),
             email: $('#email_front').val(),
             fullname: $('#fullname_front').val(),
