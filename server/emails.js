@@ -1,10 +1,22 @@
 const nodemailer = require('nodemailer')
-const aws = require('./aws.js')
+const mg = require('nodemailer-mailgun-transport')
+const uuidv4 = require('uuid/v4')
+// const aws = require('./aws.js')
 const config = require('./config.js')
 
-let transporter = nodemailer.createTransport({
-    SES: new aws.SES({region: "eu-west-1"})
-});
+const auth = {
+    auth: {
+      api_key: config.mailgun.apiKey,
+      domain: config.mailgun.domain
+    }
+}
+const nodemailerMailgun = nodemailer.createTransport(mg(auth));
+
+// let transporter = nodemailer.createTransport({
+//     SES: new aws.SES({region: "eu-west-1"})
+// });
+
+let transporter = nodemailer.createTransport(mg(auth))
 
 var emails = {
     sent: [],
@@ -118,5 +130,11 @@ var emails = {
 setInterval(function() {
     emails.purge();
 }, 1000*60)
+
+// setTimeout(function() {
+//     emails.send("adrien@d.tube", "test", uuidv4(), "127.0.0.1", function(err, res) {
+//         console.log(err, res)
+//     })
+// }, 3000)
 
 module.exports = emails

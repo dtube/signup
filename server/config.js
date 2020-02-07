@@ -21,6 +21,10 @@ var config = {
         apiKey: process.env.COINBASE_API || 'ddd',
         secret: process.env.COINBASE_SECRET || 'eee'
     },
+    mailgun: {
+        apiKey: process.env.MAILGUN_API || 'fff',
+        domain: process.env.MAILGUN_DOMAIN || 'mg.d.tube'
+    },
     limits: {
         maxTokensSold: 1000000,
         smsCount: 2,
