@@ -16,6 +16,7 @@ const sms = require('./sms.js')
 const fb = require('./facebook.js')
 const usernameValidation = require('./username_validation.js')
 const steemStreamer = require('./steemStreamer.js')
+const cors = require('cors')
 
 javalon.init({api: config.avalon.api})
 
@@ -88,7 +89,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             res.send(debug)
         })
 
-        app.get('/bar', function (req, res) {
+        app.get('/bar', cors(), function (req, res) {
             var confirmed = 0
             var pending = 0
             db.collection('charges').find({
