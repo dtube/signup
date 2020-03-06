@@ -21,6 +21,7 @@
     "aws-sdk": "^2.517.0",
     "axios": "^0.19.0",
     "coinbase-commerce-node": "^1.0.3",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-sslify": "^1.2.0",
     "helmet": "^3.21.0",

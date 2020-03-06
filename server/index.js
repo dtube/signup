@@ -81,13 +81,13 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         }  
         console.log(`HTTP Server listening on port ${port}!`)
 
-        app.get('/debug', function (req, res) {
-            var debug = {
-                email: emails.sent,
-                sms: sms.sent
-            }
-            res.send(debug)
-        })
+        // app.get('/debug', function (req, res) {
+        //     var debug = {
+        //         email: emails.sent,
+        //         sms: sms.sent
+        //     }
+        //     res.send(debug)
+        // })
 
         app.get('/bar', cors(), function (req, res) {
             var confirmed = 0
@@ -148,20 +148,20 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
         // captcha + email verification
         app.post('/', function (req, res) {
-            if (!req.body.email || !req.body['g-recaptcha-response'] || !req.body.birth) {
-                res.redirect('/?error=Missing Data')
-                return
-            }
-            var years = moment().diff(req.body.birth, 'years')
-            if (years < 13) {
-                res.redirect('/?kid')
-                return
-            }
-            captcha.check(req.body['g-recaptcha-response'], function(err) {
-                if (err) {
-                    res.status(400).send('Error verifying captcha')
-                    return
-                }
+            // if (!req.body.email || !req.body['g-recaptcha-response'] || !req.body.birth) {
+            //     res.redirect('/?error=Missing Data')
+            //     return
+            // }
+            // var years = moment().diff(req.body.birth, 'years')
+            // if (years < 13) {
+            //     res.redirect('/?kid')
+            //     return
+            // }
+            // captcha.check(req.body['g-recaptcha-response'], function(err) {
+            //     if (err) {
+            //         res.status(400).send('Error verifying captcha')
+            //         return
+            //     }
                 var uuid = uuidv4()
                 var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
                 emails.send(req.body.email, 'DTube Signup', uuid, ip_addr, function(err, success) {
@@ -179,7 +179,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                         res.status(400).send(err)
                     }
                 })
-            })
+            // })
         })
 
         // user clicks the email link
@@ -195,7 +195,8 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                         var acc = {
                             email: token.email,
                             birth: token.birth,
-                            startTime: new Date().getTime()
+                            startTime: new Date().getTime(),
+                            phone: 'skip'
                         }
                         db.collection('account').insertOne(acc)
                         res.send(acc)
@@ -487,12 +488,12 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             res.send()
                         break;
     
-                        case 'phone':
-                            db.collection('account').updateOne({email: token.email}, {$set: {
-                                phone: null
-                            }})
-                            res.send()
-                            break;
+                        // case 'phone':
+                        //     db.collection('account').updateOne({email: token.email}, {$set: {
+                        //         phone: null
+                        //     }})
+                        //     res.send()
+                        //     break;
                     
                         default:
                             res.status(400).send('Missing information')
