@@ -157,11 +157,11 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             //     res.redirect('/?kid')
             //     return
             // }
-            // captcha.check(req.body['g-recaptcha-response'], function(err) {
-            //     if (err) {
-            //         res.status(400).send('Error verifying captcha')
-            //         return
-            //     }
+            captcha.check(req.body['g-recaptcha-response'], function(err) {
+                if (err) {
+                    res.status(400).send('Error verifying captcha')
+                    return
+                }
                 var uuid = uuidv4()
                 var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
                 emails.send(req.body.email, 'DTube Signup', uuid, ip_addr, function(err, success) {
@@ -179,7 +179,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                         res.status(400).send(err)
                     }
                 })
-            // })
+            })
         })
 
         // user clicks the email link
