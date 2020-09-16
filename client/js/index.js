@@ -337,7 +337,7 @@ function loadInfo(uuid) {
         el.appendChild(ifrm);
         
         // assign url
-        ifrm.setAttribute('src', 'https://emb.d.tube/#!/ashtv/QmRZMemN8bZ9Pqmk5peZrqjjtgGbCiDSJU7oBZLmuL5ZgP/true');
+        ifrm.setAttribute('src', 'https://emb.d.tube/#!/hetmasteen/QmRZMemN8bZ9Pqmk5peZrqjjtgGbCiDSJU7oBZLmuL5ZgP/true');
         ifrm.setAttribute('width', '100%')
         ifrm.setAttribute('height', '100%')
         ifrm.style.border = 0
