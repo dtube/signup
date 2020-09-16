@@ -1,5 +1,8 @@
 const aws = require('./aws.js')
 const sns = new aws.SNS({region: "eu-west-1"})
+
+let plivo = require('plivo');
+let plivo_client = new plivo.Client();
 const config = require('./config.js')
 
 var sms = {
@@ -12,15 +15,20 @@ var sms = {
             cb('Maximum rate limit exceeded. Please wait a few hours and try again.')
             return
         }
-        sns.publish({
-            Message: message,
-            PhoneNumber: phoneNumber
-        }, function(err, result) {
-            if (err) {
-                console.log(err)
-                cb('Error sending SMS to '+phoneNumber)
-                return
-            }
+
+        var phoneNumberExtension = parseInt(phoneNumber.split(' ')[0].replace('+',''))
+
+        if (config.smsAllowedCountries.indexOf(phoneNumberExtension) == -1) {
+            cb('Your country (+'+phoneNumberExtension+') is not available for SMS verification')
+            return
+        }
+        
+        var ourPhoneNumber = '+1 415-349-5620'
+        plivo_client.messages.create(
+            ourPhoneNumber,
+            phoneNumber,
+            message
+        ).then(function(message_created) {
             cb()
             console.log('sent sms to '+phoneNumber)
             sms.sent.push({
@@ -28,6 +36,10 @@ var sms = {
                 ts: new Date().getTime(),
                 ip: ip
             })
+        }).catch(function(err) {
+            console.log(err)
+            cb('Error sending SMS to '+phoneNumber)
+            return
         })
     },
     limited: (phoneNumber, ip) => {

@@ -32,6 +32,7 @@
     "nodemailer-mailgun-transport": "^2.0.0",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
+    "plivo": "^4.9.0",
     "steem": "^0.7.7",
     "uuid": "^3.3.3"
   }

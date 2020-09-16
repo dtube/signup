@@ -33,7 +33,11 @@ var config = {
         emailPeriod: 1000*60*5,
         smsCodeAttempts: 3
     },
-    steemStreamer: true,
+    smsAllowedCountries: [
+        1, // USA + Canada
+        91, //India
+    ],
+    steemStreamer: false,
     steemStartBlock: 36563600,
     updateTokenPrice: 10*60000
 }

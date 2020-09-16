@@ -196,7 +196,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             email: token.email,
                             birth: token.birth,
                             startTime: new Date().getTime(),
-                            phone: 'skip'
+                            // phone: 'skip'
                         }
                         db.collection('account').insertOne(acc)
                         res.send(acc)
@@ -488,12 +488,12 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             res.send()
                         break;
     
-                        // case 'phone':
-                        //     db.collection('account').updateOne({email: token.email}, {$set: {
-                        //         phone: null
-                        //     }})
-                        //     res.send()
-                        //     break;
+                        case 'phone':
+                            db.collection('account').updateOne({email: token.email}, {$set: {
+                                phone: null
+                            }})
+                            res.send()
+                            break;
                     
                         default:
                             res.status(400).send('Missing information')

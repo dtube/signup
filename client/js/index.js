@@ -1,5 +1,9 @@
 // email
 myEmail = null
+smsAllowedCountries = [
+    1, // USA + Canada
+    91, //India
+]
 
 startSignup.onclick = function() {
     $('#front').hide()
@@ -93,25 +97,27 @@ backSms.onclick = function() {
 
 sendCode.onclick = function() {
     var phone = $('#phone').val()
-    var extension = $(".iti__selected-flag")[0].title.split('+')[1]
-    var number = '+'+extension+phone
-    console.log(number)
-    axios({
-        method: "POST",
-        timeout: 15000,
-        url: "/smsCode/"+myUuid,
-        data: {
-            phone: number
-        }
-    }).then(function(data) {
-        console.log(data)
-        $('#sms_verif').hide()
-        $('#sms_verif2').show()
-    }).catch(function(err, data) {
-        console.log(err.response.data)
-        loadInfo(myUuid)
-        toastError(err.response.data)
-    })
+    var extension = parseInt($(".iti__selected-flag")[0].title.split('+')[1])
+    if (smsAllowedCountries.indexOf(extension) > -1) {
+        var number = '+'+extension+' '+phone
+        axios({
+            method: "POST",
+            timeout: 15000,
+            url: "/smsCode/"+myUuid,
+            data: {
+                phone: number
+            }
+        }).then(function(data) {
+            $('#sms_verif').hide()
+            $('#sms_verif2').show()
+        }).catch(function(err, data) {
+            loadInfo(myUuid)
+            toastError(err.response.data)
+        })
+    } else {
+        toastError("Your country is not available for SMS verification")
+    }
+    
 }
 
 verifySmsCode.onclick = function() {
