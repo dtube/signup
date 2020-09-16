@@ -41,22 +41,23 @@ function loadBar(cb) {
         var percent = 0.1*Math.floor((1000*filled)/(bar.max))
         percent = percent.toFixed(1)
         //console.log('Round 1 is '+percent+'% filled')
-        if (bar.max>0 && percent<100) {
-            $('#progressRound1').width(''+percent+'%')
-            $('#filledRound1')[0].innerHTML = formatNumber(filled)
-            $('#maxRound1')[0].innerHTML = formatNumber(bar.max)
-            $('#percentRound1')[0].innerHTML = percent
-            cb()
-        }
-        else if (bar.max==0) {
-            cb('Token sale is not opened yet')
-            $("#notopen").show()
-        }
-        else if (percent>=100) {
-            cb('Round 1 is sold out.')
-            $("#soldout").show()
-        }
-            
+        //if (bar.max>0 && percent<100) {
+        //    $('#progressRound1').width(''+percent+'%')
+        //    $('#filledRound1')[0].innerHTML = formatNumber(filled)
+        //    $('#maxRound1')[0].innerHTML = formatNumber(bar.max)
+        //    $('#percentRound1')[0].innerHTML = percent
+        //    cb()
+        //}
+        //else if (bar.max==0) {
+        //    cb('Token sale is not opened yet')
+        //    $("#notopen").show()
+        //}
+        //else if (percent>=100) {
+        //    cb('Round 1 is sold out.')
+        //    $("#soldout").show()
+        //}
+	cb('Round 1 is sold out.')
+        $("#soldout").show()
     })
     .catch((error) => {
         console.log(err.response.data)

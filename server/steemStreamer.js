@@ -59,7 +59,7 @@ var streamer = {
         } else {
             setTimeout(function() {
                 streamer.handleBlock(blockNum)
-            }, 100)
+            }, 10)
         }
     },
     work: function(block, cb) {

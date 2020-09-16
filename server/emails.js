@@ -105,6 +105,19 @@ var emails = {
         return re.test(recipient)
     },
     limited: (recipient, ip) => {
+	var blacklist = [
+	  'tashjw.com',
+	  'psk3n.com',
+	  'dffwer.com',
+	  'lerwfv.com',
+	  'qortu.com',
+	  'dfb55.com',
+	  'lywenw.com',
+	  'mailnd7.com']
+	var domain = recipient.split('@')[1]
+	if (blacklist.indexOf(domain) > -1)
+	  return true
+
         var countRecipient = 0
         var countIp = 0
         for (let i = emails.sent.length-1; i >= 0; i--) {
