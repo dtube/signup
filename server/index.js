@@ -157,21 +157,25 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
             //     res.redirect('/?kid')
             //     return
             // }
-            captcha.check(req.body['g-recaptcha-response'], function(err) {
-                if (err) {
-                    res.status(400).send('Error verifying captcha')
-                    return
-                }
+            // captcha.check(req.body['g-recaptcha-response'], function(err) {
+            //     if (err) {
+            //         res.status(400).send('Error verifying captcha')
+            //         return
+            //     }
                 var uuid = uuidv4()
                 var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
                 emails.send(req.body.email, 'DTube Signup', uuid, ip_addr, function(err, success) {
                     if (!err) {
-                        db.collection('tokens').insertOne({
+                        var acc = {
                             _id: uuid,
                             email: req.body.email,
                             birth: req.body.birth,
                             ts: new Date().getTime()
-                        }, function(err) {
+                        }
+                        if (req.query.ref)
+                            acc.ref = req.query.ref
+
+                        db.collection('tokens').insertOne(acc, function(err) {
                             if (err) throw err;
                             res.redirect('/?ok')
                         })
@@ -179,7 +183,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                         res.status(400).send(err)
                     }
                 })
-            })
+            // })
         })
 
         // user clicks the email link
@@ -196,6 +200,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             email: token.email,
                             birth: token.birth,
                             startTime: new Date().getTime(),
+                            ref: token.ref
                             // phone: 'skip'
                         }
                         db.collection('account').insertOne(acc)
@@ -529,15 +534,15 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                         }
                     }, function() {
                         var give_bw = 50000
-                        var give_vt = 1000
+                        var give_vt = 500
                         var give_dtc = 10
                         if (acc.phone && acc.phone != 'skip') {
-                            give_vt += 1000
-                            give_dtc += 500
+                            give_vt += 2000
+                            give_dtc += 60
                         }
                         if (acc.facebook && acc.facebook != 'skip') {
                             give_vt += 1000
-                            give_dtc += 100
+                            give_dtc += 30
                         }
                         createAccAndFeed(acc.username, acc.pub, give_bw, give_vt, give_dtc)
                         res.send()
