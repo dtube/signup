@@ -33,6 +33,7 @@
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
     "plivo": "^4.9.0",
+    "secp256k1": "^4.0.2",
     "steem": "^0.7.7",
     "uuid": "^3.3.3"
   }

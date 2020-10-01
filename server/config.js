@@ -3,7 +3,9 @@ var config = {
         api: process.env.AVALON_API || 'http://localhost:3001',
         priv: process.env.AVALON_PRIV || 'fff',
         account: process.env.AVALON_USER || 'dtube',
-        account_dtc: process.env.AVALON_USER_DTC || 'dtube.signup'
+        account_dtc: process.env.AVALON_USER_DTC || 'dtube.signup',
+        account_airdrop: process.env.AVALON_USER_AIRDROP || 'dtube.airdrop',
+        account_airdrop_priv: process.env.AVALON_PRIV_AIRDROP || 'fff'
     },
     protocol: process.env.PROTOCOL || 'http://',
     ssl: process.env.ENABLE_SSL || false,
@@ -37,7 +39,7 @@ var config = {
         1, // USA + Canada
         91, //India
     ],
-    steemStreamer: false,
+    steemStreamer: true,
     steemStartBlock: 36563600,
     updateTokenPrice: 10*60000
 }

@@ -8,7 +8,7 @@ const https = require('https')
 const http = require('http')
 const enforce = require('express-sslify')
 const steem = require('steem')
-const javalon = require('javalon')
+javalon = require('javalon')
 const axios = require('axios')
 const emails = require('./emails.js')
 const captcha = require('./captcha.js')
@@ -42,6 +42,27 @@ process.on('SIGINT', function() {
     ending = true
     process.exit()
 })
+
+// airdrop list
+airdropList = {}
+airdroppedList = {}
+fs.readFile('./airdropped.csv', function(err, data) {
+    var tmp = data.toString('utf8').split('\n')
+    for (let i = 0; i < tmp.length; i++)
+        airdroppedList[tmp[i].split(',')[0]] = tmp[i].split(',')[1]
+    delete tmp
+    console.log('Loaded '+Object.keys(airdropList).length+' claims for airdrop')
+    console.log(airdroppedList)
+    fs.readFile('./airdrop.csv', function(err, data) {
+        var tmp = data.toString('utf8').split('\n')
+        for (let i = 0; i < tmp.length; i++)
+            airdropList[tmp[i].split(',')[0]] = tmp[i].split(',')[1]
+        delete tmp
+        console.log('Loaded '+Object.keys(airdropList).length+' recipients for airdrop')
+        console.log(airdropList)
+    })
+})
+
 
 // express server
 const app = express()
@@ -89,27 +110,14 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         //     res.send(debug)
         // })
 
-        app.get('/bar', cors(), function (req, res) {
-            var confirmed = 0
-            var pending = 0
-            db.collection('charges').find({
-                status: 'charge:confirmed'
-            }).toArray(function(err, chargesConfirmed) {
-                for (let i = 0; i < chargesConfirmed.length; i++)
-                    confirmed += parseInt(chargesConfirmed[i].personal_info.amount)
-
-                db.collection('charges').find({
-                    status: 'charge:pending'
-                }).toArray(function(err, chargesPending) {
-                    for (let i = 0; i < chargesPending.length; i++)
-                        pending += parseInt(chargesPending[i].personal_info.amount)
-                    res.send({
-                        max: config.limits.maxTokensSold,
-                        confirmed: confirmed,
-                        pending: pending
-                    })
-                })
-            })
+        app.get('/airdrop-eligible/:username', cors(), function (req, res) {
+            let username = req.params.username
+            if (airdropList[username]) {
+                var amount = Math.floor(100*parseFloat(airdropList[username])/6)
+                res.send({eligible: amount})
+            }
+            else
+                res.send({eligible: false})
         })
 
         // notice next round
