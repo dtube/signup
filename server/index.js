@@ -85,10 +85,18 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
 
     // mailing list
     setTimeout(function() {
-        db.collection('accounts').findOne({optin: true, mainnet: {$exists: false}}, {}, function(err, res) {
+        db.collection('account').findOne({
+            optin: true,
+            mainnet: {$exists: false}
+        }, function(err, res) {
             if (err) throw err
             if (res) {
-                console.log(res)
+                emails.sendNews(res.email, function(err, result) {
+                    if (err) console.log('ERROR: ',err)
+                    else {
+                        db.collection('account').updateOne({email: res.email}, {$set: {mainnet: true}})
+                    }
+                })
             } else console.log('No more email to send for mainnet email')
         })
     }, 3000)

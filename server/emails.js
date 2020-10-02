@@ -21,7 +21,7 @@ let transporter = nodemailer.createTransport(mg(auth))
 
 var emails = {
     sent: [],
-    sendNews: (recipient) => {
+    sendNews: (recipient, cb) => {
         if (!emails.validate(recipient)) {
             cb(recipient+' is not a valid email')
             return
