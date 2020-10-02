@@ -365,20 +365,20 @@ function loadInfo(uuid) {
 function accountCreation(account) {
     $('#account_creation').show()
     progress(5)
-    var vp = 1000
+    var vp = 500
     var dtc = 0.1
     if (account.facebook === 'skip')
         unverified('facebook')
     else {
         vp += 1000
-        dtc += 1
+        dtc += 0.3
     }
 
     if (account.phone === 'skip')
         unverified('phone')
     else {
-        vp += 1000
-        dtc += 5
+        vp += 2000
+        dtc += 0.6
     }
     $("#userDisp")[0].innerHTML = '@'+account.username
     $("#totalVP")[0].innerHTML = '+'+vp
