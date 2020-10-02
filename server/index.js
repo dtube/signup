@@ -52,14 +52,14 @@ fs.readFile('./airdropped.csv', function(err, data) {
         airdroppedList[tmp[i].split(',')[0]] = tmp[i].split(',')[1]
     delete tmp
     console.log('Loaded '+Object.keys(airdropList).length+' claims for airdrop')
-    console.log(airdroppedList)
+    // console.log(airdroppedList)
     fs.readFile('./airdrop.csv', function(err, data) {
         var tmp = data.toString('utf8').split('\n')
         for (let i = 0; i < tmp.length; i++)
             airdropList[tmp[i].split(',')[0]] = tmp[i].split(',')[1]
         delete tmp
         console.log('Loaded '+Object.keys(airdropList).length+' recipients for airdrop')
-        console.log(airdropList)
+        // console.log(airdropList)
     })
 })
 
