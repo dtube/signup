@@ -82,6 +82,16 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
     db = client.db(mongoDbName);
     if (config.steemStreamer)
         steemStreamer.start(db)
+
+    // mailing list
+    setTimeout(function() {
+        db.collection('accounts').findOne({optin: true, mainnet: {$exists: false}}, {}, function(err, res) {
+            if (err) throw err
+            if (res) {
+                console.log(res)
+            } else console.log('No more email to send for mainnet email')
+        })
+    }, 3000)
     http.createServer(app).listen(port, '::1', () => {
         if (config.ssl) {
             const privateKey = fs.readFileSync('/etc/letsencrypt/live/'+config.domain+'/privkey.pem', 'utf8');

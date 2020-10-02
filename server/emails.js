@@ -3,7 +3,8 @@ const mg = require('nodemailer-mailgun-transport')
 const uuidv4 = require('uuid/v4')
 // const aws = require('./aws.js')
 const config = require('./config.js')
-
+const fs = require('fs')
+const htmlMainnet = fs.readFileSync('./templates/mainnet.html', 'utf8')
 const auth = {
     auth: {
       api_key: config.mailgun.apiKey,
@@ -20,6 +21,24 @@ let transporter = nodemailer.createTransport(mg(auth))
 
 var emails = {
     sent: [],
+    sendNews: (recipient) => {
+        if (!emails.validate(recipient)) {
+            cb(recipient+' is not a valid email')
+            return
+        }
+        transporter.sendMail({
+            from: '"DTube Signup" <noreply@d.tube>',
+            to: recipient,
+            subject: "DTUBE Mainnet is now Live!!",
+            html: htmlMainnet
+        }, function(err, res) {
+            if (err) cb(err)
+            else {
+                cb(null, res)
+                console.log('sent mainnet email to '+recipient)
+            }
+        });
+    },
     send: (recipient, subject, uuid, ip, cb) => {
         if (!emails.validate(recipient)) {
             cb(recipient+' is not a valid email')
