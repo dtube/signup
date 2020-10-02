@@ -27,9 +27,9 @@ var emails = {
             return
         }
         transporter.sendMail({
-            from: '"DTube Signup" <noreply@d.tube>',
+            from: '"DTube Info" <noreply@d.tube>',
             to: recipient,
-            subject: "DTUBE Mainnet is now Live!!",
+            subject: "DTube coin is live and can be traded!",
             html: htmlMainnet
         }, function(err, res) {
             if (err) cb(err)
