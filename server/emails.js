@@ -30,7 +30,7 @@ var emails = {
             return
         }
         var link = config.protocol+config.domain+'/?uuid='+uuid
-        var text = "To continue the testnet account creation process, please click on the following link:\n"
+        var text = "To continue the account creation process, please click on the following link:\n"
         var htmlText = text.replace('\n','<br/>')
         text += link
         htmlText += '<a href="'+link+'">'+link+'</a>'
