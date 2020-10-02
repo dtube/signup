@@ -84,7 +84,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         steemStreamer.start(db)
 
     // mailing list
-    setTimeout(function() {
+    setInterval(function() {
         db.collection('account').findOne({
             optin: true,
             mainnet: {$exists: false}
