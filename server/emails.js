@@ -45,7 +45,7 @@ var emails = {
             return
         }
 
-        if (emails.limited(realRecipient, ip)) {
+        if (emails.limited(recipient, ip)) {
             cb('Maximum rate limit exceeded. Please wait a few minutes and try again.')
             return
         }
@@ -66,7 +66,7 @@ var emails = {
                 cb(null, res)
                 console.log('sent email to '+recipient)
                 emails.sent.push({
-                    recipient: realRecipient,
+                    recipient: recipient,
                     ts: new Date().getTime(),
                     ip: ip
                 })
