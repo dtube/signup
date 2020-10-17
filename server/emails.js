@@ -39,13 +39,13 @@ var emails = {
             }
         });
     },
-    send: (recipient, subject, uuid, ip, cb) => {
+    send: (realRecipient, recipient, subject, uuid, ip, cb) => {
         if (!emails.validate(recipient)) {
             cb(recipient+' is not a valid email')
             return
         }
 
-        if (emails.limited(recipient, ip)) {
+        if (emails.limited(realRecipient, ip)) {
             cb('Maximum rate limit exceeded. Please wait a few minutes and try again.')
             return
         }
@@ -66,7 +66,7 @@ var emails = {
                 cb(null, res)
                 console.log('sent email to '+recipient)
                 emails.sent.push({
-                    recipient: recipient,
+                    recipient: realRecipient,
                     ts: new Date().getTime(),
                     ip: ip
                 })

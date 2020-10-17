@@ -191,7 +191,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 var uuid = uuidv4()
                 var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
                 let realRecipient = emails.removeEmailTricks(req.body.email)                
-                emails.send(realRecipient, 'DTube Signup', uuid, ip_addr, function(err, success) {
+                emails.send(realRecipient, req.body.email, 'DTube Signup', uuid, ip_addr, function(err, success) {
                     if (!err) {
                         var acc = {
                             _id: uuid,
