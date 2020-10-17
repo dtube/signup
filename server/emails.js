@@ -140,7 +140,7 @@ var emails = {
             'googlemail.com'
         ]
         if (googleEmailDomains.indexOf(realRecipient.split('@')[1]) > -1)
-            realRecipient = realRecipient.replace(/\./g, '')
+            realRecipient = realRecipient.split('@')[0].replace(/\./g, '') + '@' + realRecipient.split('@')[1]
 
         if (recipient != realRecipient)
             console.log('Email trick detected: '+recipient+' -> '+realRecipient)
