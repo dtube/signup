@@ -44,7 +44,8 @@ var emails = {
             cb(recipient+' is not a valid email')
             return
         }
-        if (emails.limited(recipient, ip)) {
+
+        if (emails.limited(realRecipient, ip)) {
             cb('Maximum rate limit exceeded. Please wait a few minutes and try again.')
             return
         }
@@ -65,7 +66,7 @@ var emails = {
                 cb(null, res)
                 console.log('sent email to '+recipient)
                 emails.sent.push({
-                    recipient: recipient,
+                    recipient: realRecipient,
                     ts: new Date().getTime(),
                     ip: ip
                 })
@@ -123,19 +124,42 @@ var emails = {
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return re.test(recipient)
     },
+    removeEmailTricks: (recipient) => {
+        // see https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html
+
+        // handle email plus(+) sign addressing trick
+        // many email providers do this
+        let realRecipient = recipient
+        if (recipient.indexOf('+') < recipient.indexOf('@'))
+            realRecipient = recipient.split('@')[0].split('+')[0] + recipient.split('@')[1]
+
+        // and dot(.) sign
+        // google mail only
+        let googleEmailDomains = [
+            'gmail.com',
+            'googlemail.com'
+        ]
+        if (googleEmailDomains.indexOf(realRecipient.split('@')[1]) > -1)
+            realRecipient = realRecipient.replace(/\./g, '')
+
+        if (recipient != realRecipient)
+            console.log('Email trick detected: '+recipient+' -> '+recipient)
+
+        return realRecipient
+    },
     limited: (recipient, ip) => {
-	var blacklist = [
-	  'tashjw.com',
-	  'psk3n.com',
-	  'dffwer.com',
-	  'lerwfv.com',
-	  'qortu.com',
-	  'dfb55.com',
-	  'lywenw.com',
-	  'mailnd7.com']
-	var domain = recipient.split('@')[1]
-	if (blacklist.indexOf(domain) > -1)
-	  return true
+        var blacklist = [
+        'tashjw.com',
+        'psk3n.com',
+        'dffwer.com',
+        'lerwfv.com',
+        'qortu.com',
+        'dfb55.com',
+        'lywenw.com',
+        'mailnd7.com']
+	    var domain = recipient.split('@')[1]
+	    if (blacklist.indexOf(domain) > -1)
+	        return true
 
         var countRecipient = 0
         var countIp = 0

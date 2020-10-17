@@ -190,14 +190,18 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 }
                 var uuid = uuidv4()
                 var ip_addr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-                emails.send(req.body.email, 'DTube Signup', uuid, ip_addr, function(err, success) {
+                let realRecipient = emails.removeEmailTricks(req.body.email)                
+                emails.send(realRecipient, 'DTube Signup', uuid, ip_addr, function(err, success) {
                     if (!err) {
                         var acc = {
                             _id: uuid,
-                            email: req.body.email,
+                            email: realRecipient,
                             birth: req.body.birth,
                             ts: new Date().getTime()
                         }
+                        if (req.body.email !== realRecipient)
+                            acc.emailInput = req.body.email
+
                         if (req.query.ref)
                             acc.ref = req.query.ref
 
@@ -227,8 +231,10 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             birth: token.birth,
                             startTime: new Date().getTime(),
                             ref: token.ref
-                            // phone: 'skip'
                         }
+                        if (token.emailInput)
+                            acc.emailInput = token.emailInput
+                        
                         db.collection('account').insertOne(acc)
                         res.send(acc)
                     } else
