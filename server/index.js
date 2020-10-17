@@ -183,6 +183,10 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                 res.redirect('/?kid')
                 return
             }
+            if (years > 120) {
+                res.redirect('/?error=Invalid Birth Date')
+                return
+            }
             captcha.check(req.body['g-recaptcha-response'], function(err) {
                 if (err) {
                     res.status(400).send('Error verifying captcha')
