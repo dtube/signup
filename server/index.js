@@ -84,22 +84,22 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         steemStreamer.start(db)
 
     // mailing list
-    setInterval(function() {
-        db.collection('account').findOne({
-            optin: true,
-            mainnet: {$exists: false}
-        }, function(err, res) {
-            if (err) throw err
-            if (res) {
-                emails.sendNews(res.email, function(err, result) {
-                    if (err) console.log('ERROR: ',err)
-                    else {
-                        db.collection('account').updateOne({email: res.email}, {$set: {mainnet: true}})
-                    }
-                })
-            } else console.log('No more email to send for mainnet email')
-        })
-    }, 3000)
+    // setInterval(function() {
+    //     db.collection('account').findOne({
+    //         optin: true,
+    //         mainnet: {$exists: false}
+    //     }, function(err, res) {
+    //         if (err) throw err
+    //         if (res) {
+    //             emails.sendNews(res.email, function(err, result) {
+    //                 if (err) console.log('ERROR: ',err)
+    //                 else {
+    //                     db.collection('account').updateOne({email: res.email}, {$set: {mainnet: true}})
+    //                 }
+    //             })
+    //         } else console.log('No more email to send for mainnet email')
+    //     })
+    // }, 3000)
     http.createServer(app).listen(port, '::1', () => {
         if (config.ssl) {
             const privateKey = fs.readFileSync('/etc/letsencrypt/live/'+config.domain+'/privkey.pem', 'utf8');
