@@ -143,7 +143,7 @@ var emails = {
             realRecipient = realRecipient.replace(/\./g, '')
 
         if (recipient != realRecipient)
-            console.log('Email trick detected: '+recipient+' -> '+recipient)
+            console.log('Email trick detected: '+recipient+' -> '+realRecipient)
 
         return realRecipient
     },
