@@ -305,13 +305,18 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                         res.status(400).send('Error linking facebook')
                         return
                     }
-                    db.collection('account').updateOne({email: token.email}, {
-                        $set: {facebook: facebook}
-                    }, function() {
-                        res.send()
+                    db.collection('account').findOne({"facebook.profile.id": facebook.profile.id}, function(err, acc) {
+                        if (acc) {
+                            res.status(400).send('Facebook account already used')
+                            return
+                        }
+                        db.collection('account').updateOne({email: token.email}, {
+                            $set: {facebook: facebook}
+                        }, function() {
+                            res.send()
+                        })
                     })
                 })
-                
             })
         })
 
