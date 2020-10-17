@@ -130,8 +130,8 @@ var emails = {
         // handle email plus(+) sign addressing trick
         // many email providers do this
         let realRecipient = recipient
-        if (recipient.indexOf('+') < recipient.indexOf('@'))
-            realRecipient = recipient.split('@')[0].split('+')[0] + recipient.split('@')[1]
+        if (recipient.indexOf('+') > -1 && recipient.indexOf('+') < recipient.indexOf('@'))
+            realRecipient = recipient.split('@')[0].split('+')[0] + '@' + recipient.split('@')[1]
 
         // and dot(.) sign
         // google mail only
