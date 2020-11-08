@@ -38,28 +38,34 @@ var config = {
     smsAllowedCountries: [
         1, // USA + Canada
         91, // India
-	350, // Gibraltar
-	386, // Slovenia
-	356, // Malta
-	972, // Israel
-	234, // Nigeria
-	27, // South Africa
-	352, // Luxembourg
-	966, // Saudi Arabia
-	66, // Thailand
-	90, // Turkey
-	86, // China
-	971, // UAE
-	41, // Switzerland
-	45, // Denmark
-	44, // United Kingdom
-	82, // South Korea
-	357, // Cyprus
-	65, // Singapore
+        350, // Gibraltar
+        386, // Slovenia
+        356, // Malta
+        972, // Israel
+        234, // Nigeria
+        27, // South Africa
+        352, // Luxembourg
+        966, // Saudi Arabia
+        66, // Thailand
+        90, // Turkey
+        86, // China
+        971, // UAE
+        41, // Switzerland
+        45, // Denmark
+        44, // United Kingdom
+        82, // South Korea
+        357, // Cyprus
+        65, // Singapore
     ],
     steemStreamer: true,
     steemStartBlock: 36563600,
-    updateTokenPrice: 10*60000
+    updateTokenPrice: 10*60000,
+    partnersAdmins: [
+        "curator",
+        "steeminator3000",
+        "heimindanger",
+        "french.fyde"
+    ]
 }
 
 module.exports = config

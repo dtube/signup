@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DTube Partners</title>
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/spectre.min.css">
+    <link rel="stylesheet" href="/css/spectre-exp.min.css">
+    <link rel="stylesheet" href="/css/spectre-icons.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/intlTelInput.min.css">
+    <!-- <script src="https://hcaptcha.com/1/api.js" async defer></script> -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body class="bg-navy">
+    <div class="container" style='margin-top:30px;'>
+        <center>
+            <div class="hero hero-sm">
+                <div class="hero-body">
+                    <img width="200" src="https://about.d.tube/img/kit/Logo_White.svg"/>
+                    <h4>Partners</h4>
+                    <br /><br />
+                    <div id="front" style="display:none">
+                        <div class="columns">
+                            <form id='form' class='form-vertical col-4 col-mx-auto' action='' method='POST'>
+                                <div class="form-group">
+                                    <label class="form-label" for="username">Username</label>
+                                    <input class="form-input" type="text" id="username">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="priv">Key</label>
+                                    <input class="form-input" type="password" id="priv">
+                                </div>
+                                <div class="form-group" id="adminHidden" style="display: none">
+                                    <label class="form-label" for="partner">Partner Name</label>
+                                    <input class="form-input" type="text" id="partner">
+                                </div>
+                                <br />
+                                <button id="loginPartners" class="btn btn-primary btn-lg" type="button">
+                                    <i class="icon icon-people"></i> Login
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="refStats" style="display: none">
+                        <table class="table" id="refStatsTable" style="display:none">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Email</th>
+                                    <th>Facebook</th>
+                                    <th>Phone</th>
+                                    <th>Mailing</th>
+                                    <th>d.tube name</th>
+                                    <th>Finalized</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </center>
+    </div>
+    <center>
+        <div id="toastError" class="toast toast-primary" style="display: none; position: fixed; top: 0px;"></div>
+        <div id="toastSuccess" class="toast toast-success" style="display: none; position: fixed; top: 0px;"></div>        
+    </center>
+    <div class="modal" id="modal-id">
+        <a onclick='$(".modal").removeClass("active")' class="modal-overlay" aria-label="Close"></a>
+        <div class="modal-container">
+            <div class="modal-body">
+                <div id="modalContent" class="content" style='height: 400px'>
+                    <!-- content here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="./js/intlTelInput-jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/javalon/bin/javalon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js" integrity="sha256-u/J1Urdrk3nCYFefpoeTMgI5viU1ujCDu2fXXoSJjhg=" crossorigin="anonymous"></script>
+    <script src="./js/common.js"></script>
+    <script src="./js/partners.js"></script>
+    <script>
+        $("#loader").hide()
+        startup()
+        function startup() {
+            var urlParams = new URLSearchParams(location.search)
+            if (urlParams.has('uuid'))
+                localStorage.setItem('uuid', urlParams.get('uuid'))
+
+            myUuid = localStorage.getItem('uuid')
+
+            if (urlParams.has('fb')) {
+                linkFacebook(urlParams.get('fb'))
+                return
+            }
+
+            
+            if (myUuid && myUuid.length > 0) {
+                loadInfo(myUuid)
+                return
+            }
+            
+            if (urlParams.has('kid')) {
+                toastError('You need to be at least 13 years old to get a DTube account')
+            }
+
+            if (urlParams.has('fberror')) {
+                toastError('Error connecting with Facebook')
+            }
+
+            if (urlParams.has('error')) {
+                toastError(urlParams.get('error'))
+            }
+                
+            
+            if (urlParams.has('ok'))
+                $('#step3').show()
+            else {
+                //$('#step1').show()
+                $('#front').show()
+                if (urlParams.has('ref'))
+                    ref.value = urlParams.get('ref')
+            }
+        }
+    </script>
+    
+    
+</body>
+</html>
