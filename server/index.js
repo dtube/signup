@@ -639,7 +639,7 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             finalized: true
                         }
                     }, function() {
-                        var give_bw = 50000
+                        var give_bw = 20000
                         var give_vt = 500
                         var give_dtc = 10
                         if (acc.phone && acc.phone != 'skip') {
