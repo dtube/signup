@@ -14,6 +14,7 @@ const emails = require('./emails.js')
 const captcha = require('./captcha.js')
 const sms = require('./sms.js')
 const fb = require('./facebook.js')
+const partners = require('./partners.js')
 const usernameValidation = require('./username_validation.js')
 const steemStreamer = require('./steemStreamer.js')
 const cors = require('cors')
@@ -127,6 +128,66 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         //     }
         //     res.send(debug)
         // })
+
+        app.post('/refStats', function(req, resultRefStats) {
+            if (!req.body.sign || !req.body.sign.sender) {
+                resultRefStats.status(500).send({})
+                return
+            }
+
+            let lookingAt = req.body.sign.sender
+            if (config.partnersAdmins.indexOf(req.body.sign.sender) > -1)
+                if (req.body.sign.data.partner)
+                    lookingAt = req.body.sign.data.partner
+
+            db.collection('account').find({
+                ref: lookingAt
+            }).toArray(function(err, accounts) {
+                let tx = req.body.sign
+                let username = tx.sender
+                partners.verifyLogin(tx, function(isValid) {
+                    if (!isValid) {
+                        resultRefStats.status(400).send("Could not authenticate "+username)
+                        return
+                    } else {
+                        if (!accounts || accounts.length == 0) {
+                            resultRefStats.send({accounts: []})
+                            return
+                        }
+                        for (let i = 0; i < accounts.length; i++) {
+                            delete accounts[i].birth
+                            delete accounts[i]._id
+                            delete accounts[i].pub
+                            let emailLeft = accounts[i].email.split('@')[0]
+                            let emailRight = accounts[i].email.split('@')[1].split('.')[0]
+                            let emailExtension = accounts[i].email.split('@')[1].split('.')[1]
+                            let obscureEmail = ''
+                            
+                            if (emailLeft.length >= 3) {
+                                obscureEmail += emailLeft[0]+emailLeft[1]+emailLeft[2]
+                                let y = 0
+                                while (y < emailLeft.length - 3) {
+                                    obscureEmail += '*'
+                                    y++
+                                }
+                            } else {
+                                obscureEmail += emailLeft
+                            }
+                            
+                            obscureEmail += '@'+emailRight[0]+emailRight[1]
+                            y = 0
+                            while (y < emailRight.length - 2) {
+                                obscureEmail += '*'
+                                y++
+                            }
+                            obscureEmail += '.'+emailExtension
+                            accounts[i].email = obscureEmail
+                        }
+                        resultRefStats.send({accounts: accounts})
+                    }
+                })
+            })
+        })
 
         app.get('/airdrop-eligible/:username', cors(), function (req, res) {
             let username = req.params.username
