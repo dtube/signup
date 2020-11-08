@@ -100,13 +100,13 @@ var streamer = {
                         }
                         newTx = javalon.sign(config.avalon.account_airdrop_priv, config.avalon.account_airdrop, newTx)
                         console.log('SENDING', newTx)
+			airdroppedList[steemUsername] = airdropList[steemUsername]
+                        delete airdropList[steemUsername]
                         javalon.sendTransaction(newTx, function(err, res) {
                             if (err) throw err;
                             console.log(res)
                             console.log('Sent '+airdrop+' to '+dest)
-                            airdroppedList[steemUsername] = airdropList[steemUsername]
-                            delete airdropList[steemUsername]
-    
+
                             var tmpList = []
                             for (const key in airdropList)
                                 tmpList.push(key+','+airdropList[key])
