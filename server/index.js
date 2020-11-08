@@ -129,6 +129,10 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
         //     res.send(debug)
         // })
 
+        app.get('/partners/', function(req, res) {
+            res.redirect("/partners.html")
+        })
+
         app.post('/refStats', function(req, resultRefStats) {
             if (!req.body.sign || !req.body.sign.sender) {
                 resultRefStats.status(500).send({})
