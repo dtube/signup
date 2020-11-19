@@ -639,17 +639,20 @@ MongoClient.connect(mongoUrl, { useNewUrlParser: true }, function(err, client) {
                             finalized: true
                         }
                     }, function() {
-                        var give_bw = 20000
-                        var give_vt = 500
-                        var give_dtc = 10
-                        if (acc.phone && acc.phone != 'skip') {
-                            give_vt += 2000
-                            give_dtc += 60
-                        }
+                        var give_bw = 10000
+                        var give_vt = 20
+                        var give_dtc = 0
+
                         if (acc.facebook && acc.facebook != 'skip') {
                             give_vt += 1000
-                            give_dtc += 30
+                            give_dtc += 25
                         }
+                        
+                        if (acc.phone && acc.phone != 'skip') {
+                            give_vt += 3000
+                            give_dtc += 75
+                        }
+                        
                         createAccAndFeed(acc.username, acc.pub, give_bw, give_vt, give_dtc)
                         res.send()
                     })
